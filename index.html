@@ -4,38 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI TechLabs — Agents IA & Systèmes Digitaux</title>
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts : Prompt (headings) + Mukta (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600&family=Prompt:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Tailwind config — Design Tokens Gamma -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
-            violet: {
-              50:  '#faf5ff', 100: '#f3e8ff', 200: '#e9d5ff', 300: '#d8b4fe',
-              400: '#c084fc', 500: '#a855f7', 600: '#9333ea', 700: '#7e22ce',
-              800: '#6b21a8', 900: '#581c87',
-            }
+            gammaPrimary: '#A95B95',
+            gammaBodyText: '#DAD8E9',
+            gammaSubText:  '#C6BFEE',
+            gammaCardBg:   '#0B0C23',
+            gammaBg:       '#05050A',
+          },
+          fontFamily: {
+            heading: ['Prompt',  'sans-serif'],
+            body:    ['Mukta',   'sans-serif'],
           },
           keyframes: {
-            fadeUp:     { '0%': {opacity:'0',transform:'translateY(32px)'}, '100%': {opacity:'1',transform:'translateY(0)'} },
-            fadeIn:     { '0%': {opacity:'0'}, '100%': {opacity:'1'} },
-            glow:       { '0%,100%': {boxShadow:'0 0 15px rgba(192,132,252,0.3)'}, '50%': {boxShadow:'0 0 35px rgba(192,132,252,0.6)'} },
-            float:      { '0%,100%': {transform:'translateY(0)'}, '50%': {transform:'translateY(-10px)'} },
-            scanline:   { '0%': {transform:'translateY(-100%)'}, '100%': {transform:'translateY(100vh)'} },
-            pulse2:     { '0%,100%': {opacity:'0.4'}, '50%': {opacity:'0.8'} },
+            fadeUp:   { '0%': {opacity:'0', transform:'translateY(30px)'}, '100%': {opacity:'1', transform:'translateY(0)'} },
+            pulseDot: { '0%,100%': {opacity:'.35'}, '50%': {opacity:'1'} },
+            scanLine: { '0%': {transform:'translateY(-100%)'}, '100%': {transform:'translateY(100vh)'} },
+            drawPath: { to: {strokeDashoffset:'0'} },
           },
           animation: {
-            'fade-up':     'fadeUp 0.7s cubic-bezier(0.22,0.61,0.36,1) forwards',
-            'fade-in':     'fadeIn 0.5s ease forwards',
-            'glow':        'glow 3s ease-in-out infinite',
-            'float':       'float 6s ease-in-out infinite',
-            'scanline':    'scanline 8s linear infinite',
-            'pulse2':      'pulse2 4s ease-in-out infinite',
+            'fade-up':  'fadeUp .7s cubic-bezier(.22,.61,.36,1) forwards',
+            'pulse-dot':'pulseDot 2.2s ease-in-out infinite',
+            'scan-line':'scanLine 9s linear infinite',
+            'draw-path':'drawPath 1.8s ease forwards',
           }
         }
       }
@@ -43,244 +47,228 @@
   </script>
 
   <style>
-    *, *::before, *::after { font-family: 'Inter', sans-serif; box-sizing: border-box; }
-    html { background: #000; color: #f9fafb; }
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html   { background: #05050A; scroll-behavior: smooth; }
+    body   { font-family: 'Mukta', sans-serif; background: #05050A; color: #DAD8E9; overflow-x: hidden; }
+    h1,h2,h3,h4,h5 { font-family: 'Prompt', sans-serif; color: #FFFFFF; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #7e22ce; border-radius: 3px; }
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar        { width: 5px; }
+    ::-webkit-scrollbar-track  { background: #05050A; }
+    ::-webkit-scrollbar-thumb  { background: #A95B95; border-radius: 4px; }
 
-    /* === GRID BACKGROUND === */
+    /* ── Grid pattern bg ── */
     .grid-bg {
       background-image:
-        linear-gradient(rgba(139,92,246,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139,92,246,0.06) 1px, transparent 1px);
-      background-size: 52px 52px;
-      background-color: #000;
+        linear-gradient(rgba(169,91,149,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(169,91,149,.055) 1px, transparent 1px);
+      background-size: 50px 50px;
     }
 
-    /* === VIOLET GLOW ORBS === */
+    /* ── Orb (radial glow) ── */
     .orb {
       position: absolute; border-radius: 50%;
-      filter: blur(90px); pointer-events: none; will-change: transform;
+      filter: blur(100px); pointer-events: none; will-change: transform;
     }
-    .orb-violet { background: radial-gradient(circle, rgba(139,92,246,0.22) 0%, transparent 70%); }
-    .orb-purple { background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%); }
-    .orb-pink   { background: radial-gradient(circle, rgba(192,132,252,0.12) 0%, transparent 70%); }
+    .orb-primary { background: radial-gradient(circle, rgba(169,91,149,.22) 0%, transparent 70%); }
+    .orb-deep    { background: radial-gradient(circle, rgba(11,12,35,.95) 0%, transparent 70%); }
 
-    /* === GRADIENT TEXT === */
-    .gradient-text {
-      background: linear-gradient(135deg, #f9fafb 0%, #c084fc 45%, #a855f7 100%);
+    /* ── Gradient text ── */
+    .g-text {
+      background: linear-gradient(135deg, #FFFFFF 0%, #DAD8E9 40%, #A95B95 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .gradient-text-violet {
-      background: linear-gradient(90deg, #c084fc 0%, #a855f7 50%, #7c3aed 100%);
+    .g-text-pink {
+      background: linear-gradient(90deg, #C87AB4 0%, #A95B95 50%, #7B3D6B 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
 
-    /* === GLASS CARD === */
-    .glass-card {
-      background: linear-gradient(135deg, rgba(15,10,25,0.92) 0%, rgba(10,8,20,0.97) 100%);
-      border: 1px solid rgba(192,132,252,0.14);
-      backdrop-filter: blur(16px);
-      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+    /* ── Navbar ── */
+    .nav-blur {
+      background: rgba(5,5,10,.82);
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid rgba(169,91,149,.12);
     }
-    .glass-card:hover {
-      border-color: rgba(192,132,252,0.5);
-      box-shadow: 0 0 28px rgba(192,132,252,0.18), 0 0 60px rgba(139,92,246,0.10), inset 0 0 20px rgba(192,132,252,0.04);
+
+    /* ── Glass card ── */
+    .g-card {
+      background: #0B0C23;
+      border: 1px solid rgba(169,91,149,.15);
+      transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+    }
+    .g-card:hover {
+      border-color: rgba(169,91,149,.5);
+      box-shadow: 0 0 28px rgba(169,91,149,.18), 0 0 70px rgba(169,91,149,.07);
       transform: translateY(-3px);
     }
 
-    /* === GLOW BUTTON === */
-    .btn-violet {
-      background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
-      border: 1px solid rgba(192,132,252,0.4);
-      transition: all 0.3s ease;
+    /* ── Primary button ── */
+    .btn-primary {
+      background: linear-gradient(135deg, #A95B95 0%, #8A3E78 100%);
+      border: 1px solid rgba(169,91,149,.5);
+      color: #fff;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 500;
+      transition: all .3s ease;
       position: relative; overflow: hidden;
     }
-    .btn-violet::before {
+    .btn-primary::after {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
-      opacity: 0; transition: opacity 0.3s ease;
+      background: linear-gradient(135deg, #C478AE 0%, #A95B95 100%);
+      opacity: 0; transition: opacity .3s ease;
     }
-    .btn-violet:hover::before { opacity: 1; }
-    .btn-violet:hover { box-shadow: 0 0 25px rgba(168,85,247,0.55), 0 0 60px rgba(139,92,246,0.25); transform: translateY(-1px); }
-    .btn-violet span { position: relative; z-index: 1; }
+    .btn-primary:hover::after { opacity: 1; }
+    .btn-primary:hover { box-shadow: 0 0 22px rgba(169,91,149,.55), 0 0 55px rgba(169,91,149,.2); transform: translateY(-1px); }
+    .btn-primary span { position: relative; z-index: 1; }
 
-    .btn-outline-violet {
-      border: 1px solid rgba(192,132,252,0.4);
-      background: rgba(139,92,246,0.06);
-      transition: all 0.3s ease;
-      color: #c084fc;
+    /* ── Outline button ── */
+    .btn-outline {
+      border: 1px solid rgba(169,91,149,.4);
+      color: #C6BFEE;
+      background: rgba(169,91,149,.06);
+      font-family: 'Prompt', sans-serif;
+      font-weight: 500;
+      transition: all .3s ease;
     }
-    .btn-outline-violet:hover {
-      border-color: #c084fc; background: rgba(139,92,246,0.15);
-      box-shadow: 0 0 18px rgba(168,85,247,0.35);
-    }
-
-    /* === NAVBAR === */
-    .navbar-glass {
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(192,132,252,0.08);
+    .btn-outline:hover {
+      border-color: #A95B95;
+      background: rgba(169,91,149,.15);
+      box-shadow: 0 0 18px rgba(169,91,149,.3);
+      color: #fff;
     }
 
-    /* === TAG / BADGE === */
-    .tag-violet {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-      color: #c084fc; background: rgba(192,132,252,0.1);
-      border: 1px solid rgba(192,132,252,0.25);
-      padding: 4px 12px; border-radius: 100px;
+    /* ── Tag/Badge ── */
+    .tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: 'Mukta', sans-serif;
+      font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      color: #A95B95;
+      background: rgba(169,91,149,.1);
+      border: 1px solid rgba(169,91,149,.25);
+      padding: 3px 11px 3px 9px; border-radius: 100px;
     }
-    .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #c084fc; flex-shrink: 0; animation: pulse2 2s ease-in-out infinite; }
+    .tag-dot { width:6px; height:6px; border-radius:50%; background:#A95B95; animation: pulseDot 2.2s ease-in-out infinite; flex-shrink:0; }
 
-    /* === HERO BACKGROUND === */
-    .hero-bg {
-      background-color: #000;
-      background-image:
-        linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
-      background-size: 52px 52px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* === JUSTICE SCALE SVG illustration === */
-    .hero-illustration {
-      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-      width: 50%; max-width: 700px;
-      opacity: 0.12; pointer-events: none;
+    /* ── Pill ── */
+    .pill {
+      font-size:.68rem; font-weight:600; color:#C6BFEE;
+      background: rgba(198,191,238,.08);
+      border: 1px solid rgba(198,191,238,.18);
+      padding: 2px 9px; border-radius:5px;
     }
 
-    /* === NUMBER BADGE === */
-    .num-badge {
-      width: 2.25rem; height: 2.25rem; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg, #9333ea, #c084fc);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.75rem; color: white;
-      box-shadow: 0 0 12px rgba(147,51,234,0.5);
-    }
-
-    /* === CARD GLOW HOVER === */
-    .card-glow {
-      transition: all 0.35s ease;
-    }
-    .card-glow:hover {
-      box-shadow: 0 0 0 1px rgba(192,132,252,0.4), 0 0 30px rgba(192,132,252,0.2), 0 0 80px rgba(139,92,246,0.1);
-      transform: translateY(-4px);
-    }
-
-    /* === SEPARATOR === */
-    .sep { border-color: rgba(192,132,252,0.1); }
-
-    /* === SCROLL REVEAL BASE === */
+    /* ── Scroll reveal ── */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1);
+      transform: translateY(26px);
+      transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .reveal.in { opacity:1; transform:translateY(0); }
+    .d1  { transition-delay:.08s; }
+    .d2  { transition-delay:.16s; }
+    .d3  { transition-delay:.24s; }
+    .d4  { transition-delay:.32s; }
+    .d5  { transition-delay:.40s; }
+    .d6  { transition-delay:.48s; }
+
+    /* ── SVG graph path ── */
+    .svg-path {
+      stroke-dasharray: 480;
+      stroke-dashoffset: 480;
     }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-    .reveal-delay-5 { transition-delay: 0.5s; }
-    .reveal-delay-6 { transition-delay: 0.6s; }
+    .svg-path.drawn { animation: drawPath 1.8s ease forwards; }
 
-    /* === MOBILE MENU === */
-    #mobile-menu { display: none; }
-    #mobile-menu.open { display: flex; }
+    /* ── Mobile menu ── */
+    #mobile-menu { display:none; }
+    #mobile-menu.open { display:flex; }
 
-    /* === GRAPH LINE ANIMATION === */
-    .graph-line {
-      stroke-dasharray: 400;
-      stroke-dashoffset: 400;
-      transition: stroke-dashoffset 2s ease;
-    }
-    .graph-line.drawn { stroke-dashoffset: 0; }
+    /* ── Dot bullet ── */
+    .dot-li { display:flex; align-items:flex-start; gap:8px; color:#DAD8E9; }
+    .dot-li::before { content:''; width:5px; height:5px; border-radius:50%; background:#A95B95; flex-shrink:0; margin-top:7px; }
 
-    /* === PRICING CARD FEATURED === */
-    .pricing-featured {
-      border-color: rgba(192,132,252,0.45) !important;
-      box-shadow: 0 0 40px rgba(192,132,252,0.18), 0 0 80px rgba(139,92,246,0.1);
-    }
+    /* ── Separator ── */
+    .sep { border-color: rgba(169,91,149,.14); }
 
-    /* === AGENT PILL === */
-    .agent-pill {
-      background: rgba(192,132,252,0.09);
-      border: 1px solid rgba(192,132,252,0.2);
-      border-radius: 5px; padding: 3px 9px;
-      font-size: 0.68rem; color: #c084fc; font-weight: 500;
+    /* ── Number circle ── */
+    .num {
+      width:2.1rem; height:2.1rem; border-radius:50%; flex-shrink:0;
+      background: linear-gradient(135deg,#8A3E78,#A95B95);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Prompt',sans-serif; font-weight:700; font-size:.73rem; color:#fff;
+      box-shadow: 0 0 12px rgba(169,91,149,.45);
     }
 
-    /* === TECH SYMBOLS OVERLAY === */
-    .tech-symbol {
-      position: absolute; font-family: 'Inter', monospace;
-      color: rgba(192,132,252,0.18); font-weight: 700;
-      pointer-events: none; user-select: none;
+    /* ── Hero scanline ── */
+    .scanline-wrap { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+    .scanline-wrap::after {
+      content:''; position:absolute; left:0; right:0; height:1.5px;
+      background: linear-gradient(90deg,transparent,rgba(169,91,149,.3),transparent);
+      animation: scanLine 9s linear infinite;
     }
 
-    /* === DOT BULLET === */
-    .dot-v { display: flex; align-items: flex-start; gap: 8px; }
-    .dot-v::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #c084fc; flex-shrink: 0; margin-top: 6px; }
-
-    /* === SCROLLING LINE EFFECT === */
-    .scanline-overlay {
-      position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1;
+    /* ── Tech labels ── */
+    .tech-lbl {
+      position:absolute; pointer-events:none; user-select:none;
+      font-family:'Prompt',sans-serif; font-weight:700;
+      color: rgba(169,91,149,.2);
     }
-    .scanline-overlay::after {
-      content: '';
-      position: absolute; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(192,132,252,0.35), transparent);
-      animation: scanline 8s linear infinite;
+
+    /* ── Section fade-in-top ── */
+    .section-fade { position:relative; overflow:hidden; }
+    .section-fade::before {
+      content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+      width:60%; height:1px;
+      background: linear-gradient(90deg,transparent,rgba(169,91,149,.35),transparent);
     }
   </style>
 </head>
 
-<body class="bg-black text-gray-50 antialiased overflow-x-hidden">
+<body>
 
-<!-- ═══════════════ SCANLINE OVERLAY (global) ═══════════════ -->
-<div class="scanline-overlay fixed inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
+<!-- Global scanline overlay -->
+<div class="scanline-wrap fixed z-0" aria-hidden="true"></div>
 
-<!-- ═══════════════════════════════ NAVBAR ═══════════════════════════════ -->
-<nav id="navbar" class="navbar-glass fixed top-0 left-0 right-0 z-50">
-  <div class="max-w-7xl mx-auto px-5 py-3.5 flex items-center justify-between">
+<!-- ══════════════════════════════════════ NAVBAR ══════════════════════════════════════ -->
+<nav id="nav" class="nav-blur fixed top-0 inset-x-0 z-50">
+  <div class="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
 
     <!-- Logo -->
     <a href="#hero" class="flex items-center gap-2.5 group flex-shrink-0">
-      <div class="w-8 h-8 rounded-lg flex items-center justify-center relative" style="background: linear-gradient(135deg,#7c3aed,#c084fc);">
-        <span class="text-white font-black text-xs tracking-tight">AI</span>
-        <div class="absolute inset-0 rounded-lg" style="box-shadow: 0 0 14px rgba(192,132,252,0.6);"></div>
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center relative flex-shrink-0"
+           style="background:linear-gradient(135deg,#7B3D6B,#A95B95);">
+        <span class="font-heading font-bold text-xs text-white relative z-10">AI</span>
+        <div class="absolute inset-0 rounded-lg" style="box-shadow:0 0 14px rgba(169,91,149,.65);"></div>
       </div>
-      <span class="font-black text-base tracking-tight text-white">AI<span class="text-violet-400">Tech</span>Labs</span>
+      <span class="font-heading font-bold text-[1.05rem] text-white leading-none">
+        AI<span class="text-gammaPrimary">Tech</span>Labs
+      </span>
     </a>
 
-    <!-- Desktop nav -->
+    <!-- Desktop links -->
     <div class="hidden md:flex items-center gap-7">
-      <a href="#services"      class="text-sm text-gray-400 hover:text-white transition-colors duration-200 font-medium">Services</a>
-      <a href="#architecture"  class="text-sm text-gray-400 hover:text-white transition-colors duration-200 font-medium">Architecture</a>
-      <a href="#tarifs"        class="text-sm text-gray-400 hover:text-white transition-colors duration-200 font-medium">Tarifs</a>
-      <a href="#processus"     class="text-sm text-gray-400 hover:text-white transition-colors duration-200 font-medium">Processus</a>
-      <a href="#contact"       class="text-sm text-gray-400 hover:text-white transition-colors duration-200 font-medium">Contact</a>
+      <a href="#services"     class="text-[.83rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Services</a>
+      <a href="#architecture" class="text-[.83rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Architecture</a>
+      <a href="#tarifs"       class="text-[.83rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Tarifs</a>
+      <a href="#processus"    class="text-[.83rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Processus</a>
+      <a href="#contact"      class="text-[.83rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Contact</a>
       <a href="https://aitechlabs.com" target="_blank" rel="noopener"
-         class="text-sm text-violet-400 hover:text-violet-300 transition-colors duration-200 font-medium">Cliquez ici ↗</a>
+         class="text-[.83rem] font-body font-semibold text-gammaPrimary hover:text-white transition-colors">Cliquez ici ↗</a>
     </div>
 
     <!-- Desktop CTA -->
-    <div class="hidden md:flex items-center gap-3">
-      <a href="#contact" class="btn-violet text-white text-sm font-bold px-5 py-2.5 rounded-xl flex items-center gap-2">
+    <div class="hidden md:block">
+      <a href="#contact"
+         class="btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[.83rem]">
         <span>Découvrir nos Agents IA</span>
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        <svg class="w-3.5 h-3.5 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+        </svg>
       </a>
     </div>
 
     <!-- Hamburger -->
-    <button id="menu-btn" class="md:hidden text-gray-400 hover:text-white p-2 transition-colors" aria-label="Menu">
+    <button id="ham" class="md:hidden text-gammaSubText hover:text-white p-2 transition-colors" aria-label="Menu">
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
@@ -289,115 +277,119 @@
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="flex-col gap-1 px-5 pb-5 border-t sep md:hidden">
-    <a href="#services"     class="block py-2.5 text-sm text-gray-400 hover:text-white transition-colors font-medium" onclick="closeMobileMenu()">Services</a>
-    <a href="#architecture" class="block py-2.5 text-sm text-gray-400 hover:text-white transition-colors font-medium" onclick="closeMobileMenu()">Architecture</a>
-    <a href="#tarifs"       class="block py-2.5 text-sm text-gray-400 hover:text-white transition-colors font-medium" onclick="closeMobileMenu()">Tarifs</a>
-    <a href="#processus"    class="block py-2.5 text-sm text-gray-400 hover:text-white transition-colors font-medium" onclick="closeMobileMenu()">Processus</a>
-    <a href="#contact"      class="block py-2.5 text-sm text-gray-400 hover:text-white transition-colors font-medium" onclick="closeMobileMenu()">Contact</a>
-    <a href="https://aitechlabs.com" target="_blank" class="block py-2.5 text-sm text-violet-400 font-medium">Cliquez ici ↗</a>
+    <a href="#services"     onclick="closeMenu()" class="block py-2.5 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Services</a>
+    <a href="#architecture" onclick="closeMenu()" class="block py-2.5 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Architecture</a>
+    <a href="#tarifs"       onclick="closeMenu()" class="block py-2.5 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Tarifs</a>
+    <a href="#processus"    onclick="closeMenu()" class="block py-2.5 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Processus</a>
+    <a href="#contact"      onclick="closeMenu()" class="block py-2.5 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Contact</a>
+    <a href="https://aitechlabs.com" target="_blank" class="block py-2.5 text-sm font-body font-semibold text-gammaPrimary">Cliquez ici ↗</a>
     <div class="pt-3">
-      <a href="#contact" class="btn-violet w-full text-center text-sm font-bold px-5 py-3 rounded-xl block">
+      <a href="#contact" class="btn-primary block text-center text-sm px-5 py-3 rounded-xl">
         <span>Découvrir nos Agents IA</span>
       </a>
     </div>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
-<section id="hero" class="hero-bg min-h-screen flex items-center pt-20 pb-16 relative overflow-hidden">
 
-  <!-- Violet orbs -->
-  <div class="orb orb-violet w-[600px] h-[600px] -top-32 -left-32 opacity-70"></div>
-  <div class="orb orb-purple w-[500px] h-[500px] bottom-0 right-0 opacity-60"></div>
-  <div class="orb orb-pink   w-[300px] h-[300px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40"></div>
+<!-- ══════════════════════════════════════ HERO ══════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex items-center pt-16 pb-20 overflow-hidden grid-bg">
 
-  <!-- Tech symbols floating -->
-  <span class="tech-symbol text-3xl font-black" style="top:15%;left:8%;font-size:2.5rem;">⚡</span>
-  <span class="tech-symbol text-xl font-black" style="top:25%;left:18%;font-size:0.9rem;letter-spacing:0.2em;">IA</span>
-  <span class="tech-symbol" style="top:65%;left:5%;font-size:0.8rem;letter-spacing:0.15em;">AUTOMATISATION</span>
-  <span class="tech-symbol" style="top:40%;right:4%;font-size:0.75rem;letter-spacing:0.1em;">TECHNOLOGIE</span>
-  <span class="tech-symbol" style="top:70%;right:8%;font-size:2rem;">◈</span>
-  <span class="tech-symbol" style="top:20%;right:18%;font-size:1.5rem;">⬡</span>
+  <!-- Orbs -->
+  <div class="orb orb-primary w-[640px] h-[640px] -top-40 -left-40 opacity-60"></div>
+  <div class="orb orb-primary w-[500px] h-[500px] bottom-0 right-0 opacity-50"></div>
+  <div class="orb orb-primary w-[300px] h-[300px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-25"></div>
 
-  <!-- Justice Scale SVG (background illustration) -->
-  <div class="hero-illustration" aria-hidden="true">
-    <svg viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
-      <!-- Base -->
-      <rect x="290" y="520" width="20" height="60" fill="rgba(192,132,252,0.4)" rx="3"/>
-      <rect x="230" y="575" width="140" height="8" fill="rgba(192,132,252,0.3)" rx="4"/>
-      <!-- Pole -->
-      <rect x="297" y="200" width="6" height="325" fill="rgba(192,132,252,0.35)" rx="3"/>
-      <!-- Beam -->
-      <rect x="100" y="200" width="400" height="5" fill="rgba(192,132,252,0.4)" rx="2.5"/>
+  <!-- Justice scale SVG illustration (right side) -->
+  <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 max-w-[660px] opacity-[0.1] pointer-events-none" aria-hidden="true">
+    <svg viewBox="0 0 620 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Base pole -->
+      <rect x="307" y="210" width="6" height="330" fill="rgba(169,91,149,.6)" rx="3"/>
+      <!-- Top cap -->
+      <circle cx="310" cy="205" r="10" fill="rgba(169,91,149,.5)" stroke="rgba(169,91,149,.8)" stroke-width="2"/>
+      <!-- Crossbeam -->
+      <rect x="100" y="200" width="420" height="5" fill="rgba(169,91,149,.55)" rx="2.5"/>
+      <!-- Base foot -->
+      <rect x="258" y="535" width="104" height="10" fill="rgba(169,91,149,.4)" rx="5"/>
+      <rect x="278" y="540" width="64" height="5" fill="rgba(169,91,149,.35)" rx="2.5"/>
       <!-- Left chain -->
-      <line x1="120" y1="205" x2="120" y2="310" stroke="rgba(192,132,252,0.35)" stroke-width="3" stroke-dasharray="6 4"/>
+      <path d="M122 205 L122 310" stroke="rgba(169,91,149,.4)" stroke-width="2.5" stroke-dasharray="7 5"/>
       <!-- Left pan -->
-      <ellipse cx="120" cy="315" rx="60" ry="15" fill="rgba(192,132,252,0.15)" stroke="rgba(192,132,252,0.4)" stroke-width="2"/>
-      <path d="M60 315 Q120 340 180 315" stroke="rgba(192,132,252,0.4)" stroke-width="2" fill="rgba(192,132,252,0.08)"/>
-      <!-- Right chain -->
-      <line x1="480" y1="205" x2="480" y2="300" stroke="rgba(192,132,252,0.35)" stroke-width="3" stroke-dasharray="6 4"/>
+      <ellipse cx="122" cy="318" rx="64" ry="16" fill="rgba(169,91,149,.12)" stroke="rgba(169,91,149,.45)" stroke-width="2"/>
+      <path d="M58 318 Q122 344 186 318" fill="rgba(169,91,149,.07)" stroke="rgba(169,91,149,.35)" stroke-width="1.5"/>
+      <!-- Right chain (slightly lower = heavier) -->
+      <path d="M498 205 L498 305" stroke="rgba(169,91,149,.4)" stroke-width="2.5" stroke-dasharray="7 5"/>
       <!-- Right pan -->
-      <ellipse cx="480" cy="305" rx="60" ry="15" fill="rgba(192,132,252,0.15)" stroke="rgba(192,132,252,0.4)" stroke-width="2"/>
-      <path d="M420 305 Q480 330 540 305" stroke="rgba(192,132,252,0.4)" stroke-width="2" fill="rgba(192,132,252,0.08)"/>
-      <!-- Circuit lines -->
-      <path d="M50 100 L150 100 L150 150 L250 150" stroke="rgba(192,132,252,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
-      <path d="M400 400 L450 400 L450 450 L550 450" stroke="rgba(192,132,252,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
-      <circle cx="150" cy="100" r="4" fill="rgba(192,132,252,0.5)"/>
-      <circle cx="250" cy="150" r="4" fill="rgba(192,132,252,0.5)"/>
-      <circle cx="450" cy="400" r="4" fill="rgba(192,132,252,0.5)"/>
-      <!-- AI text in left pan -->
-      <text x="100" y="320" text-anchor="middle" fill="rgba(192,132,252,0.6)" font-size="12" font-weight="700" font-family="Inter">IA</text>
-      <!-- Tech text in right pan -->
-      <text x="460" y="308" text-anchor="middle" fill="rgba(192,132,252,0.6)" font-size="10" font-weight="700" font-family="Inter">TECH</text>
-      <!-- Hex nodes -->
-      <polygon points="300,80 318,90 318,110 300,120 282,110 282,90" fill="none" stroke="rgba(192,132,252,0.3)" stroke-width="2"/>
-      <polygon points="80,400 95,409 95,427 80,436 65,427 65,409"    fill="none" stroke="rgba(192,132,252,0.2)" stroke-width="1.5"/>
-      <polygon points="520,150 535,159 535,177 520,186 505,177 505,159" fill="none" stroke="rgba(192,132,252,0.2)" stroke-width="1.5"/>
+      <ellipse cx="498" cy="313" rx="64" ry="16" fill="rgba(169,91,149,.12)" stroke="rgba(169,91,149,.45)" stroke-width="2"/>
+      <path d="M434 313 Q498 339 562 313" fill="rgba(169,91,149,.07)" stroke="rgba(169,91,149,.35)" stroke-width="1.5"/>
+      <!-- Circuit traces -->
+      <path d="M50 140 L140 140 L140 190" stroke="rgba(169,91,149,.18)" stroke-width="1.5" fill="none" stroke-dasharray="5 5"/>
+      <path d="M490 430 L560 430 L560 510" stroke="rgba(169,91,149,.18)" stroke-width="1.5" fill="none" stroke-dasharray="5 5"/>
+      <circle cx="140" cy="140" r="4" fill="rgba(169,91,149,.55)"/>
+      <circle cx="560" cy="430" r="4" fill="rgba(169,91,149,.55)"/>
+      <!-- Hex frames -->
+      <polygon points="310,80 328,90 328,112 310,122 292,112 292,90" fill="none" stroke="rgba(169,91,149,.35)" stroke-width="2"/>
+      <polygon points="80,420 96,430 96,450 80,460 64,450 64,430" fill="none" stroke="rgba(169,91,149,.22)" stroke-width="1.5"/>
+      <polygon points="540,160 556,170 556,190 540,200 524,190 524,170" fill="none" stroke="rgba(169,91,149,.22)" stroke-width="1.5"/>
+      <!-- Labels in pans -->
+      <text x="100" y="323" text-anchor="middle" fill="rgba(169,91,149,.7)" font-size="11" font-weight="700" font-family="Prompt,sans-serif">IA</text>
+      <text x="476" y="318" text-anchor="middle" fill="rgba(169,91,149,.7)" font-size="9" font-weight="700" font-family="Prompt,sans-serif">TECH</text>
     </svg>
   </div>
 
+  <!-- Floating tech labels -->
+  <span class="tech-lbl text-3xl" style="top:18%;left:6%">⬡</span>
+  <span class="tech-lbl text-sm tracking-[.18em]" style="top:28%;left:16%">IA</span>
+  <span class="tech-lbl text-xs tracking-[.12em]" style="top:68%;left:4%">AUTOMATISATION</span>
+  <span class="tech-lbl text-xs tracking-[.1em]" style="top:42%;right:3%">TECHNOLOGIE</span>
+  <span class="tech-lbl text-2xl" style="top:72%;right:6%">◈</span>
+
   <!-- Content -->
   <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
-    <div class="max-w-3xl">
+    <div class="max-w-[680px]">
 
-      <div class="tag-violet mb-6 reveal">
+      <div class="tag mb-7 reveal">
         <span class="tag-dot"></span>
         Solution IA Premium
       </div>
 
-      <h1 class="font-black leading-[0.95] tracking-tight mb-6 reveal reveal-delay-1" style="font-size:clamp(3.5rem,8vw,6.5rem);">
-        <span class="gradient-text">AI TechLabs</span>
+      <h1 class="font-heading font-extrabold leading-[.93] tracking-tight mb-6 reveal d1"
+          style="font-size:clamp(3.6rem,8.5vw,6.8rem);">
+        <span class="g-text">AI TechLabs</span>
       </h1>
 
-      <p class="text-gray-300 text-xl md:text-2xl font-light leading-relaxed mb-3 reveal reveal-delay-2" style="max-width:38rem;">
+      <p class="font-body text-gammaSubText text-xl md:text-2xl leading-relaxed mb-3 reveal d2" style="max-width:36rem;">
         Agents IA et systèmes digitaux pensés pour l'exécution réelle.
       </p>
 
-      <p class="text-gray-500 text-base leading-relaxed mb-8 reveal reveal-delay-3" style="max-width:36rem;">
+      <p class="font-body text-gammaBodyText/70 text-[.95rem] leading-relaxed mb-9 reveal d3" style="max-width:34rem;">
         Nous entrons dans une période de transformation profonde. Les entreprises qui s'adaptent gagnent en stabilité, en productivité et en maîtrise.
       </p>
 
-      <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 mb-10 reveal reveal-delay-4">
-        <a href="#contact" class="btn-violet text-white font-bold px-8 py-4 rounded-xl text-base flex items-center justify-center gap-2">
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 mb-10 reveal d4">
+        <a href="#contact"
+           class="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base">
           <span>Demander une étude</span>
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          <svg class="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
         </a>
-        <a href="#contact" class="btn-outline-violet font-semibold px-8 py-4 rounded-xl text-base flex items-center justify-center gap-2">
+        <a href="#contact"
+           class="btn-outline inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base">
           Échanger sur un projet
         </a>
       </div>
 
-      <!-- Encadré descriptif violet -->
-      <div class="reveal reveal-delay-5 rounded-2xl p-5 max-w-2xl" style="background:rgba(139,92,246,0.07); border: 1px solid rgba(192,132,252,0.25); box-shadow: inset 0 0 30px rgba(139,92,246,0.05);">
-        <p class="text-gray-300 text-sm leading-relaxed">
-          AI TechLabs conçoit des <span class="text-violet-400 font-semibold">agents IA</span>, des applications web et mobile no-code, des sites professionnels et des systèmes automatisés conçus pour fonctionner dans le monde réel. <span class="text-white font-medium">Une technologie qui s'achète une fois. Un avantage qui dure dans le temps.</span>
+      <!-- Descriptive box -->
+      <div class="reveal d5 rounded-2xl p-5 max-w-[600px]"
+           style="background:rgba(169,91,149,.07); border:1px solid rgba(169,91,149,.22);">
+        <p class="font-body text-gammaBodyText text-[.9rem] leading-relaxed">
+          AI TechLabs conçoit des <span class="text-gammaPrimary font-semibold">agents IA</span>, des applications web et mobile no-code, des sites professionnels et des systèmes automatisés. <span class="text-white font-semibold">Une technologie qui s'achète une fois. Un avantage qui dure dans le temps.</span>
         </p>
-        <div class="mt-4 flex flex-wrap gap-3">
-          <span class="agent-pill">16 Agents propriétaires</span>
-          <span class="agent-pill">5 Axes stratégiques</span>
-          <span class="agent-pill">Disponible 24/7</span>
-          <span class="agent-pill">Livraison 5–7 jours</span>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="pill">16 Agents propriétaires</span>
+          <span class="pill">5 Axes stratégiques</span>
+          <span class="pill">Disponible 24/7</span>
+          <span class="pill">Livraison 5–7 jours</span>
         </div>
       </div>
 
@@ -405,499 +397,359 @@
   </div>
 
   <!-- Bottom fade -->
-  <div class="absolute bottom-0 left-0 right-0 h-24 pointer-events-none" style="background:linear-gradient(to bottom, transparent, #000)"></div>
+  <div class="absolute bottom-0 inset-x-0 h-28 pointer-events-none"
+       style="background:linear-gradient(transparent,#05050A)"></div>
 </section>
 
-<!-- ═══════════════════════════════ CONTEXTE ═══════════════════════════════ -->
-<section id="contexte" class="py-24 grid-bg relative overflow-hidden">
-  <div class="orb orb-violet w-96 h-96 top-0 right-0 opacity-30"></div>
+
+<!-- ══════════════════════════════════════ CONTEXTE ══════════════════════════════════════ -->
+<section id="contexte" class="py-24 section-fade grid-bg relative overflow-hidden">
+  <div class="orb orb-primary w-80 h-80 top-0 right-10 opacity-30"></div>
 
   <div class="max-w-7xl mx-auto px-6">
-    <div class="tag-violet mb-4 reveal"><span class="tag-dot"></span>Contexte</div>
-    <h2 class="text-4xl md:text-5xl font-black text-white mb-6 reveal reveal-delay-1">Pourquoi maintenant</h2>
-    <p class="text-gray-400 text-lg max-w-3xl mb-16 leading-relaxed reveal reveal-delay-2">
-      Nous vivons l'une des plus grandes transitions économiques et technologiques du siècle. Depuis 2022, on observe un ralentissement marqué de la création de nouveaux postes, avec une dynamique plus fragile entre 2023 et 2025. <strong class="text-white">Ce changement n'est pas une crise. C'est une mutation.</strong>
+    <div class="tag mb-4 reveal"><span class="tag-dot"></span>Contexte</div>
+    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white mb-5 reveal d1">Pourquoi maintenant</h2>
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed reveal d2">
+      Nous vivons l'une des plus grandes transitions économiques et technologiques du siècle. Depuis 2022, on observe un ralentissement marqué de la création de nouveaux postes.
+      <strong class="text-white"> Ce changement n'est pas une crise. C'est une mutation.</strong>
     </p>
 
-    <!-- Automation flow diagram -->
-    <div class="glass-card rounded-2xl p-8 mb-12 reveal">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="tag-violet"><span class="tag-dot"></span>Automatisation des flux</div>
-      </div>
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <!-- Node 1 -->
+    <!-- Automation flow card -->
+    <div class="g-card rounded-2xl p-8 mb-12 reveal">
+      <div class="tag mb-6"><span class="tag-dot"></span>Automatisation des flux numériques</div>
+
+      <!-- Flow diagram -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-5 mb-8">
+        <!-- Node -->
         <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(192,132,252,0.3);">
-            <svg class="w-8 h-8 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
+               style="background:rgba(169,91,149,.13);border:1px solid rgba(169,91,149,.3);">
+            <svg class="w-8 h-8 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
           </div>
-          <span class="text-white text-xs font-semibold text-center">Processus<br/>humain</span>
+          <span class="font-body text-gammaBodyText text-xs font-semibold text-center">Processus<br/>humain</span>
         </div>
         <!-- Arrow -->
-        <div class="flex items-center text-violet-500">
-          <div class="hidden md:flex items-center gap-1">
-            <div class="w-16 h-px bg-violet-500/40"></div>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <div class="md:hidden flex flex-col items-center gap-1">
-            <div class="h-8 w-px bg-violet-500/40"></div>
-            <svg class="w-4 h-4 rotate-90" fill="currentColor" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
+        <div class="text-gammaPrimary/50 flex items-center">
+          <div class="hidden md:flex items-center gap-1"><div class="w-14 h-px bg-gammaPrimary/30"></div><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+          <div class="md:hidden flex flex-col items-center gap-1"><div class="h-8 w-px bg-gammaPrimary/30"></div><svg class="w-3.5 h-3.5 fill-current rotate-90" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
         </div>
         <!-- Node 2 -->
         <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(139,92,246,0.2);border:1px solid rgba(192,132,252,0.4);">
-            <svg class="w-8 h-8 text-violet-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
+               style="background:rgba(169,91,149,.18);border:1px solid rgba(169,91,149,.4);">
+            <svg class="w-8 h-8 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
           </div>
-          <span class="text-white text-xs font-semibold text-center">Agent IA<br/>intégré</span>
+          <span class="font-body text-gammaBodyText text-xs font-semibold text-center">Agent IA<br/>intégré</span>
         </div>
         <!-- Arrow -->
-        <div class="flex items-center text-violet-500">
-          <div class="hidden md:flex items-center gap-1">
-            <div class="w-16 h-px bg-violet-500/40"></div>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <div class="md:hidden flex flex-col items-center gap-1">
-            <div class="h-8 w-px bg-violet-500/40"></div>
-            <svg class="w-4 h-4 rotate-90" fill="currentColor" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
+        <div class="text-gammaPrimary/50 flex items-center">
+          <div class="hidden md:flex items-center gap-1"><div class="w-14 h-px bg-gammaPrimary/30"></div><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+          <div class="md:hidden flex flex-col items-center gap-1"><div class="h-8 w-px bg-gammaPrimary/30"></div><svg class="w-3.5 h-3.5 fill-current rotate-90" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
         </div>
         <!-- Node 3 -->
         <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(192,132,252,0.3);">
-            <svg class="w-8 h-8 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
+               style="background:rgba(169,91,149,.13);border:1px solid rgba(169,91,149,.3);">
+            <svg class="w-8 h-8 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
           </div>
-          <span class="text-white text-xs font-semibold text-center">Exécution<br/>automatisée</span>
+          <span class="font-body text-gammaBodyText text-xs font-semibold text-center">Exécution<br/>automatisée</span>
         </div>
         <!-- Arrow -->
-        <div class="flex items-center text-violet-500">
-          <div class="hidden md:flex items-center gap-1">
-            <div class="w-16 h-px bg-violet-500/40"></div>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <div class="md:hidden flex flex-col items-center gap-1">
-            <div class="h-8 w-px bg-violet-500/40"></div>
-            <svg class="w-4 h-4 rotate-90" fill="currentColor" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
+        <div class="text-gammaPrimary/50 flex items-center">
+          <div class="hidden md:flex items-center gap-1"><div class="w-14 h-px bg-gammaPrimary/30"></div><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+          <div class="md:hidden flex flex-col items-center gap-1"><div class="h-8 w-px bg-gammaPrimary/30"></div><svg class="w-3.5 h-3.5 fill-current rotate-90" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
         </div>
-        <!-- Node 4 -->
+        <!-- Node 4 (highlighted) -->
         <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(192,132,252,0.2);border:1px solid rgba(192,132,252,0.5);box-shadow:0 0 20px rgba(192,132,252,0.2);">
-            <svg class="w-8 h-8 text-violet-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
+               style="background:rgba(169,91,149,.25);border:1px solid rgba(169,91,149,.6);box-shadow:0 0 18px rgba(169,91,149,.22);">
+            <svg class="w-8 h-8" style="color:#DAD8E9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
           </div>
-          <span class="text-violet-300 text-xs font-bold text-center">Stabilité<br/>opérationnelle</span>
+          <span class="font-body font-bold text-xs text-center" style="color:#A95B95">Stabilité<br/>opérationnelle</span>
         </div>
       </div>
 
       <!-- Ascending graph -->
-      <div class="mt-8 pt-6 border-t sep">
+      <div class="border-t sep pt-6">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Performance dans le temps</span>
-          <span class="text-violet-400 text-xs font-bold">↑ +340%</span>
+          <span class="font-body font-semibold text-xs uppercase tracking-wider" style="color:rgba(198,191,238,.5)">Performance dans le temps</span>
+          <span class="font-body font-bold text-xs text-gammaPrimary">↑ +340%</span>
         </div>
-        <div class="relative h-20 w-full overflow-hidden" id="graph-container">
+        <div class="relative h-20 w-full overflow-hidden" id="graph-wrap">
           <svg class="w-full h-full" viewBox="0 0 600 80" preserveAspectRatio="none">
             <defs>
-              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%"   stop-color="rgba(139,92,246,0.3)"/>
-                <stop offset="100%" stop-color="rgba(192,132,252,1)"/>
+              <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="rgba(169,91,149,.25)"/>
+                <stop offset="100%" stop-color="rgba(169,91,149,1)"/>
               </linearGradient>
-              <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%"   stop-color="rgba(192,132,252,0.2)"/>
-                <stop offset="100%" stop-color="rgba(192,132,252,0)"/>
+              <linearGradient id="lg2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%"   stop-color="rgba(169,91,149,.2)"/>
+                <stop offset="100%" stop-color="rgba(169,91,149,0)"/>
               </linearGradient>
             </defs>
-            <!-- Area fill -->
-            <path d="M0 75 C80 72 150 65 230 55 S380 30 450 18 S550 5 600 2 L600 80 L0 80 Z"
-                  fill="url(#areaGrad)" />
-            <!-- Main line -->
-            <path id="graph-path" class="graph-line"
-                  d="M0 75 C80 72 150 65 230 55 S380 30 450 18 S550 5 600 2"
-                  stroke="url(#lineGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <!-- Dots -->
-            <circle cx="230" cy="55" r="3" fill="#c084fc"/>
-            <circle cx="450" cy="18" r="3" fill="#c084fc"/>
-            <circle cx="600" cy="2"  r="4" fill="#c084fc" style="filter:drop-shadow(0 0 6px rgba(192,132,252,0.8))"/>
+            <path d="M0 76 C80 73 150 66 230 56 S380 32 452 20 S555 6 600 3 L600 80 L0 80Z"
+                  fill="url(#lg2)"/>
+            <path id="gpath" class="svg-path"
+                  d="M0 76 C80 73 150 66 230 56 S380 32 452 20 S555 6 600 3"
+                  stroke="url(#lg1)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="230" cy="56" r="3" fill="#A95B95"/>
+            <circle cx="452" cy="20" r="3" fill="#A95B95"/>
+            <circle cx="600" cy="3"  r="4.5" fill="#A95B95" style="filter:drop-shadow(0 0 5px rgba(169,91,149,.9))"/>
           </svg>
         </div>
-        <div class="flex justify-between text-xs text-gray-600 mt-1">
+        <div class="flex justify-between font-body text-xs mt-1" style="color:rgba(198,191,238,.35)">
           <span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026 →</span>
         </div>
       </div>
     </div>
 
-    <!-- 4 Grid Cards -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
-      <div class="glass-card card-glow rounded-2xl p-6 reveal">
-        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(192,132,252,0.25);">
-          <svg class="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <!-- 4 cards -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+
+      <div class="g-card rounded-2xl p-6 reveal">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.25);">
+          <svg class="w-5 h-5 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h3 class="text-white font-bold text-sm mb-1">Ce que vous automatisez</h3>
-        <p class="gradient-text-violet text-sm font-bold mb-3">devient fiable</p>
-        <p class="text-gray-500 text-xs leading-relaxed">Les processus automatisés garantissent une exécution constante, sans erreur humaine.</p>
+        <h3 class="font-heading font-semibold text-white text-sm mb-1">Ce que vous automatisez</h3>
+        <p class="g-text-pink font-heading font-semibold text-sm mb-3">devient fiable</p>
+        <p class="font-body text-gammaBodyText/65 text-xs leading-relaxed">Les processus automatisés garantissent une exécution constante, sans erreur humaine.</p>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-1">
-        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(192,132,252,0.25);">
-          <svg class="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+
+      <div class="g-card rounded-2xl p-6 reveal d1">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.25);">
+          <svg class="w-5 h-5 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
         </div>
-        <h3 class="text-white font-bold text-sm mb-1">Ce qui est fiable</h3>
-        <p class="gradient-text-violet text-sm font-bold mb-3">devient stratégique</p>
-        <p class="text-gray-500 text-xs leading-relaxed">La stabilité opérationnelle est un avantage concurrentiel durable sur le marché.</p>
+        <h3 class="font-heading font-semibold text-white text-sm mb-1">Ce qui est fiable</h3>
+        <p class="g-text-pink font-heading font-semibold text-sm mb-3">devient stratégique</p>
+        <p class="font-body text-gammaBodyText/65 text-xs leading-relaxed">La stabilité opérationnelle est un avantage concurrentiel durable.</p>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-2">
-        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(192,132,252,0.25);">
-          <svg class="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+
+      <div class="g-card rounded-2xl p-6 reveal d2">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.25);">
+          <svg class="w-5 h-5 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
         </div>
-        <h3 class="text-white font-bold text-sm mb-1">Moins de coûts</h3>
-        <p class="gradient-text-violet text-sm font-bold mb-3">et de dépendance humaine</p>
-        <p class="text-gray-500 text-xs leading-relaxed">Un agent IA équivaut en coût global à quelques mois de salaire d'un poste équivalent.</p>
+        <h3 class="font-heading font-semibold text-white text-sm mb-1">Moins de coûts</h3>
+        <p class="g-text-pink font-heading font-semibold text-sm mb-3">et de dépendance humaine</p>
+        <p class="font-body text-gammaBodyText/65 text-xs leading-relaxed">Un agent IA équivaut en coût global à quelques mois de salaire.</p>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-3">
-        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(192,132,252,0.25);">
-          <svg class="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+
+      <div class="g-card rounded-2xl p-6 reveal d3">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.25);">
+          <svg class="w-5 h-5 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
         </div>
-        <h3 class="text-white font-bold text-sm mb-1">Plus de maîtrise</h3>
-        <p class="gradient-text-violet text-sm font-bold mb-3">et de contrôle</p>
-        <p class="text-gray-500 text-xs leading-relaxed">Visibilité en temps réel sur toutes vos opérations, 24h/24 et 7j/7 sans exception.</p>
+        <h3 class="font-heading font-semibold text-white text-sm mb-1">Plus de maîtrise</h3>
+        <p class="g-text-pink font-heading font-semibold text-sm mb-3">et de contrôle</p>
+        <p class="font-body text-gammaBodyText/65 text-xs leading-relaxed">Visibilité en temps réel 24h/24, 7j/7 sur toutes vos opérations.</p>
       </div>
+
     </div>
 
-    <!-- Notre approche -->
-    <div class="glass-card rounded-2xl p-8 md:p-12 reveal">
+    <!-- Approche block -->
+    <div class="g-card rounded-2xl p-8 md:p-12 reveal">
       <div class="grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <div class="tag-violet mb-4"><span class="tag-dot"></span>Notre approche</div>
-          <h3 class="text-2xl md:text-3xl font-black text-white mb-5 leading-tight">
+          <div class="tag mb-4"><span class="tag-dot"></span>Notre approche</div>
+          <h3 class="font-heading font-bold text-2xl md:text-3xl text-white mb-5 leading-snug">
             Nous ne vendons pas des outils.<br/>
-            <span class="gradient-text-violet">Nous concevons de la stabilité opérationnelle.</span>
+            <span class="g-text-pink">Nous concevons de la stabilité opérationnelle.</span>
           </h3>
-          <p class="text-gray-400 text-sm leading-relaxed mb-4">
-            Des systèmes qui fonctionnent <strong class="text-white">24h/24, 7j/7</strong>, sans fatigue, sans absence, selon une logique stable, et qui s'améliorent dans le temps.
-          </p>
-          <p class="text-gray-400 text-sm leading-relaxed">
-            Vous remplacez un coût humain récurrent par un actif technologique maîtrisé.
+          <p class="font-body text-gammaBodyText/75 text-[.92rem] leading-relaxed mb-3">
+            Des systèmes qui fonctionnent <strong class="text-white">24h/24, 7j/7</strong>, sans fatigue, sans absence, et qui s'améliorent dans le temps.
           </p>
         </div>
-        <div class="rounded-xl p-6" style="background:rgba(192,132,252,0.06); border:1px solid rgba(192,132,252,0.2);">
-          <p class="text-white font-bold text-lg mb-2">Un agent IA s'achète une fois.</p>
-          <p class="text-violet-400 font-semibold mb-4">Il fonctionne en continu.</p>
-          <p class="text-gray-400 text-sm leading-relaxed mb-4">Son coût global équivaut, dans la majorité des cas, à quelques mois de salaire d'un poste équivalent.</p>
+        <div class="rounded-xl p-6" style="background:rgba(169,91,149,.06);border:1px solid rgba(169,91,149,.2);">
+          <p class="font-heading font-bold text-white text-lg mb-2">Un agent IA s'achète une fois.</p>
+          <p class="text-gammaPrimary font-heading font-semibold mb-4">Il fonctionne en continu.</p>
+          <p class="font-body text-gammaBodyText/70 text-[.88rem] leading-relaxed">Son coût global équivaut, dans la majorité des cas, à quelques mois de salaire d'un poste équivalent.</p>
           <div class="flex flex-wrap gap-2 mt-4">
-            <span class="agent-pill">Livraison en 5–7 jours</span>
-            <span class="agent-pill">Formation incluse</span>
-            <span class="agent-pill">Documentation complète</span>
+            <span class="pill">5–7 jours de livraison</span>
+            <span class="pill">Formation incluse</span>
+            <span class="pill">Documentation complète</span>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
-<!-- ═══════════════════════════════ SERVICES ═══════════════════════════════ -->
-<section id="services" class="py-24 bg-black relative overflow-hidden">
-  <div class="orb orb-violet w-[500px] h-[500px] -bottom-32 -left-32 opacity-25"></div>
+
+<!-- ══════════════════════════════════════ SERVICES ══════════════════════════════════════ -->
+<section id="services" class="py-24 bg-gammaBg section-fade relative overflow-hidden">
+  <div class="orb orb-primary w-96 h-96 -bottom-24 -left-24 opacity-25"></div>
 
   <div class="max-w-7xl mx-auto px-6">
-    <div class="tag-violet mb-4 reveal"><span class="tag-dot"></span>Services</div>
-    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 reveal reveal-delay-1">Ce que nous faisons</h2>
-    <p class="text-gray-400 text-lg max-w-3xl mb-16 leading-relaxed reveal reveal-delay-2">
+    <div class="tag mb-4 reveal"><span class="tag-dot"></span>Services</div>
+    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white mb-4 reveal d1">Ce que nous faisons</h2>
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed reveal d2">
       AI TechLabs propose une gamme complète de solutions digitales et d'intelligence artificielle appliquée, orientées vers l'exécution opérationnelle et la création de valeur mesurable.
     </p>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Card 1 -->
-      <div class="glass-card card-glow rounded-2xl p-7 reveal group cursor-default">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1)); border:1px solid rgba(192,132,252,0.3);">
-          <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
-          </svg>
+
+      <!-- Each service card -->
+      <div class="g-card rounded-2xl p-7 reveal group cursor-default">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+             style="background:linear-gradient(135deg,rgba(169,91,149,.2),rgba(169,91,149,.08));border:1px solid rgba(169,91,149,.3);">
+          <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
         </div>
-        <h3 class="text-white font-bold text-lg mb-2">Agents IA sur mesure</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-4">Systèmes d'exécution automatisée pensés pour votre métier et vos processus spécifiques.</p>
-        <div class="flex items-center gap-1.5 text-violet-400 text-xs font-semibold group-hover:gap-3 transition-all">
-          Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-        </div>
+        <h3 class="font-heading font-semibold text-white text-lg mb-2">Agents IA sur mesure</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed mb-4">Systèmes d'exécution automatisée pensés pour votre métier et vos processus spécifiques.</p>
+        <div class="flex items-center gap-1.5 text-gammaPrimary text-xs font-heading font-semibold group-hover:gap-3 transition-all">Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="glass-card card-glow rounded-2xl p-7 reveal reveal-delay-1 group cursor-default">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1)); border:1px solid rgba(192,132,252,0.3);">
-          <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3m-3 3h3m-3 3h3"/>
-          </svg>
+      <div class="g-card rounded-2xl p-7 reveal d1 group cursor-default">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(169,91,149,.2),rgba(169,91,149,.08));border:1px solid rgba(169,91,149,.3);">
+          <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3m-3 3h3m-3 3h3"/></svg>
         </div>
-        <h3 class="text-white font-bold text-lg mb-2">Applications web & mobile no-code</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-4">Outils métiers rapides à déployer, intuitifs et évolutifs selon vos besoins.</p>
-        <div class="flex items-center gap-1.5 text-violet-400 text-xs font-semibold group-hover:gap-3 transition-all">
-          Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-        </div>
+        <h3 class="font-heading font-semibold text-white text-lg mb-2">Applications web & mobile no-code</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed mb-4">Outils métiers rapides à déployer, intuitifs et évolutifs selon vos besoins.</p>
+        <div class="flex items-center gap-1.5 text-gammaPrimary text-xs font-heading font-semibold group-hover:gap-3 transition-all">Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
 
-      <!-- Card 3 -->
-      <div class="glass-card card-glow rounded-2xl p-7 reveal reveal-delay-2 group cursor-default">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1)); border:1px solid rgba(192,132,252,0.3);">
-          <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/>
-          </svg>
+      <div class="g-card rounded-2xl p-7 reveal d2 group cursor-default">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(169,91,149,.2),rgba(169,91,149,.08));border:1px solid rgba(169,91,149,.3);">
+          <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/></svg>
         </div>
-        <h3 class="text-white font-bold text-lg mb-2">Sites internet professionnels</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-4">Présence digitale premium qui structure la confiance et facilite la décision.</p>
-        <div class="flex items-center gap-1.5 text-violet-400 text-xs font-semibold group-hover:gap-3 transition-all">
-          Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-        </div>
+        <h3 class="font-heading font-semibold text-white text-lg mb-2">Sites internet professionnels</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed mb-4">Présence digitale premium qui structure la confiance et facilite la décision.</p>
+        <div class="flex items-center gap-1.5 text-gammaPrimary text-xs font-heading font-semibold group-hover:gap-3 transition-all">Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
 
-      <!-- Card 4 -->
-      <div class="glass-card card-glow rounded-2xl p-7 reveal reveal-delay-3 group cursor-default">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1)); border:1px solid rgba(192,132,252,0.3);">
-          <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 18V8.25m-18 0V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v2.25m-18 0h18M5.25 6h.008v.008H5.25V6z"/>
-          </svg>
+      <div class="g-card rounded-2xl p-7 reveal d3 group cursor-default">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(169,91,149,.2),rgba(169,91,149,.08));border:1px solid rgba(169,91,149,.3);">
+          <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 18V8.25m-18 0V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v2.25m-18 0h18"/></svg>
         </div>
-        <h3 class="text-white font-bold text-lg mb-2">Landing pages de conversion</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-4">Pages optimisées pour transformer les visiteurs en prospects qualifiés.</p>
-        <div class="flex items-center gap-1.5 text-violet-400 text-xs font-semibold group-hover:gap-3 transition-all">
-          Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-        </div>
+        <h3 class="font-heading font-semibold text-white text-lg mb-2">Landing pages de conversion</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed mb-4">Pages optimisées pour transformer les visiteurs en prospects qualifiés.</p>
+        <div class="flex items-center gap-1.5 text-gammaPrimary text-xs font-heading font-semibold group-hover:gap-3 transition-all">Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
 
-      <!-- Card 5 -->
-      <div class="glass-card card-glow rounded-2xl p-7 reveal reveal-delay-4 group cursor-default">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1)); border:1px solid rgba(192,132,252,0.3);">
-          <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
-          </svg>
+      <div class="g-card rounded-2xl p-7 reveal d4 group cursor-default">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(169,91,149,.2),rgba(169,91,149,.08));border:1px solid rgba(169,91,149,.3);">
+          <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
         </div>
-        <h3 class="text-white font-bold text-lg mb-2">Automatisations métiers & workflows</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-4">Processus intelligents qui sécurisent et fluidifient vos opérations internes.</p>
-        <div class="flex items-center gap-1.5 text-violet-400 text-xs font-semibold group-hover:gap-3 transition-all">
-          Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-        </div>
+        <h3 class="font-heading font-semibold text-white text-lg mb-2">Automatisations métiers & workflows</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed mb-4">Processus intelligents qui sécurisent et fluidifient vos opérations internes.</p>
+        <div class="flex items-center gap-1.5 text-gammaPrimary text-xs font-heading font-semibold group-hover:gap-3 transition-all">Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
 
-      <!-- Card 6 -->
-      <div class="glass-card card-glow rounded-2xl p-7 reveal reveal-delay-5 group cursor-default">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1)); border:1px solid rgba(192,132,252,0.3);">
-          <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-          </svg>
+      <div class="g-card rounded-2xl p-7 reveal d5 group cursor-default">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background:linear-gradient(135deg,rgba(169,91,149,.2),rgba(169,91,149,.08));border:1px solid rgba(169,91,149,.3);">
+          <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
         </div>
-        <h3 class="text-white font-bold text-lg mb-2">Audit digital & rapport stratégique</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-4">Analyse complète de votre maturité digitale avec recommandations actionnables.</p>
-        <div class="flex items-center gap-1.5 text-violet-400 text-xs font-semibold group-hover:gap-3 transition-all">
-          Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-        </div>
+        <h3 class="font-heading font-semibold text-white text-lg mb-2">Audit digital & rapport stratégique</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed mb-4">Analyse complète de votre maturité digitale avec recommandations actionnables.</p>
+        <div class="flex items-center gap-1.5 text-gammaPrimary text-xs font-heading font-semibold group-hover:gap-3 transition-all">Explorer <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
+
     </div>
 
-    <!-- Transparency disclaimer -->
-    <div class="mt-8 rounded-xl p-5 flex gap-3 items-start reveal" style="background:rgba(139,92,246,0.05);border:1px solid rgba(192,132,252,0.12);">
-      <svg class="w-4 h-4 text-violet-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
-      <p class="text-gray-500 text-xs leading-relaxed"><strong class="text-gray-300">Transparence :</strong> Les agents IA sont des outils préprogrammés d'exécution et d'assistance automatisée. Ils ne sont pas des décideurs autonomes. Il s'agit d'outils d'optimisation, non de solutions miracles.</p>
+    <!-- Disclaimer -->
+    <div class="mt-8 rounded-xl p-5 flex gap-3 items-start reveal" style="background:rgba(169,91,149,.05);border:1px solid rgba(169,91,149,.12);">
+      <svg class="w-4 h-4 text-gammaPrimary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+      <p class="font-body text-gammaBodyText/60 text-xs leading-relaxed"><strong class="text-gammaBodyText">Transparence :</strong> Les agents IA sont des outils préprogrammés. Ils ne sont pas des décideurs autonomes. Il s'agit d'outils d'optimisation, non de solutions miracles.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ ARCHITECTURE ═══════════════════════════════ -->
-<section id="architecture" class="py-24 grid-bg relative overflow-hidden">
-  <div class="orb orb-purple w-[400px] h-[400px] top-20 right-0 opacity-25"></div>
+
+<!-- ══════════════════════════════════════ ARCHITECTURE ══════════════════════════════════════ -->
+<section id="architecture" class="py-24 section-fade grid-bg relative overflow-hidden">
+  <div class="orb orb-primary w-[420px] h-[420px] top-20 right-0 opacity-22"></div>
 
   <div class="max-w-7xl mx-auto px-6">
-    <div class="tag-violet mb-4 reveal"><span class="tag-dot"></span>Architecture IA</div>
-    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 reveal reveal-delay-1">
-      Une architecture de <span class="gradient-text-violet">16 agents IA</span>
+    <div class="tag mb-4 reveal"><span class="tag-dot"></span>Architecture IA</div>
+    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white mb-4 reveal d1">
+      Une architecture de <span class="g-text-pink">16 agents IA</span>
     </h2>
-    <p class="text-gray-400 text-lg max-w-3xl mb-16 leading-relaxed reveal reveal-delay-2">
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed reveal d2">
       AI TechLabs ne vend pas des agents isolés. Nous concevons des systèmes d'agents IA spécialisés, interconnectés et déployables selon vos enjeux métiers.
     </p>
 
-    <!-- 5 Axes -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-16">
-      <div class="glass-card card-glow rounded-xl p-5 reveal">
-        <div class="text-xl mb-2">🚀</div>
-        <div class="agent-pill inline-block mb-2">AXE 1</div>
-        <p class="text-white font-bold text-xs mt-2">Croissance & relation client</p>
-        <p class="text-gray-600 text-xs mt-1 leading-relaxed">Acquisition, prospection, support et fidélisation.</p>
-      </div>
-      <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1">
-        <div class="text-xl mb-2">⚙️</div>
-        <div class="agent-pill inline-block mb-2">AXE 2</div>
-        <p class="text-white font-bold text-xs mt-2">Exécution & organisation interne</p>
-        <p class="text-gray-600 text-xs mt-1 leading-relaxed">Administration, RH, opérations métiers.</p>
-      </div>
-      <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-2">
-        <div class="text-xl mb-2">🔒</div>
-        <div class="agent-pill inline-block mb-2">AXE 3</div>
-        <p class="text-white font-bold text-xs mt-2">Sécurité, conformité & structuration</p>
-        <p class="text-gray-600 text-xs mt-1 leading-relaxed">Protection, conformité légale, qualité.</p>
-      </div>
-      <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-3">
-        <div class="text-xl mb-2">📊</div>
-        <div class="agent-pill inline-block mb-2">AXE 4</div>
-        <p class="text-white font-bold text-xs mt-2">Pilotage & supervision stratégique</p>
-        <p class="text-gray-600 text-xs mt-1 leading-relaxed">BI, analyse financière, supervision.</p>
-      </div>
-      <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-4">
-        <div class="text-xl mb-2">🔧</div>
-        <div class="agent-pill inline-block mb-2">AXE 5</div>
-        <p class="text-white font-bold text-xs mt-2">Extensions & agents sur mesure</p>
-        <p class="text-gray-600 text-xs mt-1 leading-relaxed">Agents spécifiques et systèmes personnalisés.</p>
-      </div>
+    <!-- 5 axes -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-14">
+      <div class="g-card rounded-xl p-5 reveal"><span class="text-xl">🚀</span><div class="pill inline-block my-2">AXE 1</div><p class="font-heading font-semibold text-white text-xs mt-1">Croissance & relation client</p><p class="font-body text-gammaBodyText/50 text-xs mt-1 leading-relaxed">Acquisition, prospection, support.</p></div>
+      <div class="g-card rounded-xl p-5 reveal d1"><span class="text-xl">⚙️</span><div class="pill inline-block my-2">AXE 2</div><p class="font-heading font-semibold text-white text-xs mt-1">Exécution & organisation interne</p><p class="font-body text-gammaBodyText/50 text-xs mt-1 leading-relaxed">Administration, RH, opérations.</p></div>
+      <div class="g-card rounded-xl p-5 reveal d2"><span class="text-xl">🔒</span><div class="pill inline-block my-2">AXE 3</div><p class="font-heading font-semibold text-white text-xs mt-1">Sécurité, conformité & structuration</p><p class="font-body text-gammaBodyText/50 text-xs mt-1 leading-relaxed">Protection, conformité, qualité.</p></div>
+      <div class="g-card rounded-xl p-5 reveal d3"><span class="text-xl">📊</span><div class="pill inline-block my-2">AXE 4</div><p class="font-heading font-semibold text-white text-xs mt-1">Pilotage & supervision stratégique</p><p class="font-body text-gammaBodyText/50 text-xs mt-1 leading-relaxed">BI, analyse financière, supervision.</p></div>
+      <div class="g-card rounded-xl p-5 reveal d4"><span class="text-xl">🔧</span><div class="pill inline-block my-2">AXE 5</div><p class="font-heading font-semibold text-white text-xs mt-1">Extensions & agents sur mesure</p><p class="font-body text-gammaBodyText/50 text-xs mt-1 leading-relaxed">Agents spécifiques, systèmes IA.</p></div>
     </div>
 
-    <!-- Agents grid — AXE 1 -->
+    <!-- Agents — AXE 1 -->
     <div class="mb-10">
-      <div class="flex items-center gap-3 mb-5 reveal">
-        <span class="agent-pill">AXE 1</span>
-        <span class="text-gray-300 font-semibold text-sm">Croissance & relation client</span>
-      </div>
+      <div class="flex items-center gap-3 mb-5 reveal"><span class="pill">AXE 1</span><span class="font-body font-semibold text-gammaBodyText text-sm">Croissance & relation client</span></div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card card-glow rounded-xl p-5 reveal">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Lead</p>
-          <p class="text-gray-600 text-xs mb-3">Acquisition & prospection</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Qualification automatisée de leads</li>
-            <li class="dot-v">Enrichissement des données prospects</li>
-            <li class="dot-v">Scoring et priorisation</li>
-            <li class="dot-v">Prospection multicanal</li>
-          </ul>
-        </div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Voice</p>
-          <p class="text-gray-600 text-xs mb-3">Contact vocal scripté</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Appels de qualification & RDV</li>
-            <li class="dot-v">Réponses aux questions fréquentes</li>
-            <li class="dot-v">Transfert intelligent vers humain</li>
-            <li class="dot-v">Transcription automatique</li>
-          </ul>
-        </div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-2">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Care</p>
-          <p class="text-gray-600 text-xs mb-3">Support & relation client</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Support 24/7 multicanal</li>
-            <li class="dot-v">Gestion des tickets & escalade</li>
-            <li class="dot-v">Suivi satisfaction client</li>
-            <li class="dot-v">Base de connaissances évolutive</li>
-          </ul>
-        </div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-3">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Marketing</p>
-          <p class="text-gray-600 text-xs mb-3">Contenu & diffusion</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Génération de contenu marketing</li>
-            <li class="dot-v">Publication multicanal planifiée</li>
-            <li class="dot-v">Analyse des performances</li>
-            <li class="dot-v">Veille concurrentielle</li>
-          </ul>
-        </div>
+        <div class="g-card rounded-xl p-5 reveal"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Lead</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Acquisition & prospection</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Qualification automatisée de leads</li><li class="dot-li">Enrichissement des données prospects</li><li class="dot-li">Scoring et priorisation</li><li class="dot-li">Prospection multicanal</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d1"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Voice</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Contact vocal scripté</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Appels de qualification & RDV</li><li class="dot-li">Réponses aux questions fréquentes</li><li class="dot-li">Transfert intelligent vers humain</li><li class="dot-li">Transcription automatique</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d2"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Care</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Support & relation client</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Support 24/7 multicanal</li><li class="dot-li">Gestion des tickets & escalade</li><li class="dot-li">Suivi satisfaction client</li><li class="dot-li">Base de connaissances évolutive</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d3"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Marketing</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Contenu & diffusion</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Génération de contenu marketing</li><li class="dot-li">Publication multicanal planifiée</li><li class="dot-li">Analyse des performances</li><li class="dot-li">Veille concurrentielle</li></ul></div>
       </div>
     </div>
 
     <!-- AXE 2 -->
     <div class="mb-10">
-      <div class="flex items-center gap-3 mb-5 reveal">
-        <span class="agent-pill">AXE 2</span>
-        <span class="text-gray-300 font-semibold text-sm">Exécution & organisation interne</span>
-      </div>
+      <div class="flex items-center gap-3 mb-5 reveal"><span class="pill">AXE 2</span><span class="font-body font-semibold text-gammaBodyText text-sm">Exécution & organisation interne</span></div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card card-glow rounded-xl p-5 reveal">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Flow</p>
-          <p class="text-gray-600 text-xs mb-3">Orchestration centrale</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Routage intelligent des tâches</li>
-            <li class="dot-v">Gestion des dépendances</li>
-            <li class="dot-v">Synchronisation des données</li>
-            <li class="dot-v">Monitoring global des agents</li>
-          </ul>
-        </div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Admin</p>
-          <p class="text-gray-600 text-xs mb-3">Administration & structuration</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Gestion documentaire</li>
-            <li class="dot-v">Traitement factures & contrats</li>
-            <li class="dot-v">Suivi des échéances</li>
-            <li class="dot-v">Conformité des processus</li>
-          </ul>
-        </div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-2">
-          <p class="text-violet-400 font-bold text-sm">Jarvis People</p>
-          <p class="text-gray-600 text-xs mb-3">Support RH & onboarding</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Onboarding automatisé</li>
-            <li class="dot-v">Questions RH courantes 24/7</li>
-            <li class="dot-v">Gestion congés & absences</li>
-            <li class="dot-v">Suivi évaluations & feedbacks</li>
-          </ul>
-        </div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-3">
-          <p class="text-violet-400 font-bold text-sm">Jarvis Ops</p>
-          <p class="text-gray-600 text-xs mb-3">Exécution opérationnelle métier</p>
-          <ul class="space-y-1.5 text-xs text-gray-500">
-            <li class="dot-v">Workflows métiers complexes</li>
-            <li class="dot-v">Traitement de données en masse</li>
-            <li class="dot-v">Intégration outils existants</li>
-            <li class="dot-v">Reporting temps réel</li>
-          </ul>
-        </div>
+        <div class="g-card rounded-xl p-5 reveal"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Flow</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Orchestration centrale</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Routage intelligent des tâches</li><li class="dot-li">Gestion des dépendances</li><li class="dot-li">Synchronisation des données</li><li class="dot-li">Monitoring global des agents</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d1"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Admin</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Administration & structuration</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Gestion documentaire</li><li class="dot-li">Traitement factures & contrats</li><li class="dot-li">Suivi des échéances</li><li class="dot-li">Conformité des processus</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d2"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis People</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Support RH & onboarding</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Onboarding automatisé</li><li class="dot-li">Questions RH courantes 24/7</li><li class="dot-li">Gestion congés & absences</li><li class="dot-li">Suivi évaluations & feedbacks</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d3"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Ops</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Exécution opérationnelle</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Workflows métiers complexes</li><li class="dot-li">Traitement de données en masse</li><li class="dot-li">Intégration outils existants</li><li class="dot-li">Reporting opérationnel temps réel</li></ul></div>
       </div>
     </div>
 
     <!-- AXE 3 -->
     <div class="mb-10">
-      <div class="flex items-center gap-3 mb-5 reveal">
-        <span class="agent-pill">AXE 3</span>
-        <span class="text-gray-300 font-semibold text-sm">Sécurité, conformité & structuration</span>
-      </div>
+      <div class="flex items-center gap-3 mb-5 reveal"><span class="pill">AXE 3</span><span class="font-body font-semibold text-gammaBodyText text-sm">Sécurité, conformité & structuration</span></div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card card-glow rounded-xl p-5 reveal"><p class="text-violet-400 font-bold text-sm">Jarvis Secure</p><p class="text-gray-600 text-xs mb-3">Sécurité & continuité digitale</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Surveillance des menaces</li><li class="dot-v">Gestion accès & permissions</li><li class="dot-v">Sauvegardes automatisées</li><li class="dot-v">Conformité RGPD</li></ul></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1"><p class="text-violet-400 font-bold text-sm">Jarvis Legal</p><p class="text-gray-600 text-xs mb-3">Assistance conformité</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Veille réglementaire automatisée</li><li class="dot-v">Documents juridiques standards</li><li class="dot-v">Suivi échéances légales</li><li class="dot-v">Analyse conformité contractuelle</li></ul></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-2"><p class="text-violet-400 font-bold text-sm">Jarvis Finance</p><p class="text-gray-600 text-xs mb-3">Pilotage financier</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Consolidation données financières</li><li class="dot-v">KPIs et tableaux de bord</li><li class="dot-v">Prévisions budgétaires</li><li class="dot-v">Alertes trésorerie</li></ul></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-3"><p class="text-violet-400 font-bold text-sm">Jarvis Data</p><p class="text-gray-600 text-xs mb-3">Structuration & qualité des données</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Nettoyage & normalisation</li><li class="dot-v">Détection des doublons</li><li class="dot-v">Enrichissement des données</li><li class="dot-v">Audit qualité & scoring</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Secure</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Sécurité & continuité digitale</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Surveillance des menaces</li><li class="dot-li">Gestion accès & permissions</li><li class="dot-li">Sauvegardes automatisées</li><li class="dot-li">Conformité RGPD</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d1"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Legal</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Assistance conformité</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Veille réglementaire automatisée</li><li class="dot-li">Documents juridiques standards</li><li class="dot-li">Suivi échéances légales</li><li class="dot-li">Analyse conformité contractuelle</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d2"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Finance</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Pilotage financier</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Consolidation données financières</li><li class="dot-li">KPIs et tableaux de bord</li><li class="dot-li">Prévisions budgétaires</li><li class="dot-li">Alertes trésorerie</li></ul></div>
+        <div class="g-card rounded-xl p-5 reveal d3"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Data</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Qualité des données</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Nettoyage & normalisation</li><li class="dot-li">Détection des doublons</li><li class="dot-li">Enrichissement des données</li><li class="dot-li">Audit qualité & scoring</li></ul></div>
       </div>
     </div>
 
     <!-- AXE 4 + 5 -->
     <div class="grid md:grid-cols-2 gap-6 mb-12">
       <div>
-        <div class="flex items-center gap-3 mb-5 reveal"><span class="agent-pill">AXE 4</span><span class="text-gray-300 font-semibold text-sm">Pilotage & supervision</span></div>
+        <div class="flex items-center gap-3 mb-5 reveal"><span class="pill">AXE 4</span><span class="font-body font-semibold text-gammaBodyText text-sm">Pilotage & supervision</span></div>
         <div class="grid gap-4">
-          <div class="glass-card card-glow rounded-xl p-5 reveal"><p class="text-violet-400 font-bold text-sm">Jarvis Insight</p><p class="text-gray-600 text-xs mb-3">Analyse & aide à la décision</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Analyse prédictive & tendances</li><li class="dot-v">Tableaux de bord personnalisés</li><li class="dot-v">Alertes intelligentes</li></ul></div>
-          <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1"><p class="text-violet-400 font-bold text-sm">Jarvis Control <span class="agent-pill ml-1">Premium</span></p><p class="text-gray-600 text-xs mb-3">Supervision globale</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Vue temps réel de tous les agents</li><li class="dot-v">Optimisation automatique</li><li class="dot-v">Gouvernance & audit</li></ul></div>
+          <div class="g-card rounded-xl p-5 reveal"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Insight</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Analyse & aide à la décision</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Analyse prédictive & tendances</li><li class="dot-li">Tableaux de bord personnalisés</li><li class="dot-li">Alertes intelligentes</li></ul></div>
+          <div class="g-card rounded-xl p-5 reveal d1"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Control <span class="pill ml-1">Premium</span></p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Supervision globale</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Vue temps réel de tous les agents</li><li class="dot-li">Optimisation automatique des priorités</li><li class="dot-li">Gouvernance & audit</li></ul></div>
         </div>
       </div>
       <div>
-        <div class="flex items-center gap-3 mb-5 reveal"><span class="agent-pill">AXE 5</span><span class="text-gray-300 font-semibold text-sm">Extensions & sur mesure</span></div>
+        <div class="flex items-center gap-3 mb-5 reveal"><span class="pill">AXE 5</span><span class="font-body font-semibold text-gammaBodyText text-sm">Extensions & sur mesure</span></div>
         <div class="grid gap-4">
-          <div class="glass-card card-glow rounded-xl p-5 reveal"><p class="text-violet-400 font-bold text-sm">Jarvis Architect</p><p class="text-gray-600 text-xs mb-3">Concepteur d'agents & systèmes IA</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Analyse de vos processus uniques</li><li class="dot-v">Conception d'agents personnalisés</li><li class="dot-v">Tests & optimisation</li></ul></div>
-          <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1"><p class="text-violet-400 font-bold text-sm">Jarvis Custom</p><p class="text-gray-600 text-xs mb-3">Agent sur mesure métier</p><ul class="space-y-1.5 text-xs text-gray-500"><li class="dot-v">Fonction entièrement personnalisée</li><li class="dot-v">Intégration native à votre stack</li><li class="dot-v">Support prioritaire inclus</li></ul></div>
+          <div class="g-card rounded-xl p-5 reveal"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Architect</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Concepteur d'agents & systèmes IA</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Analyse de vos processus uniques</li><li class="dot-li">Conception d'agents personnalisés</li><li class="dot-li">Tests & optimisation</li></ul></div>
+          <div class="g-card rounded-xl p-5 reveal d1"><p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Custom</p><p class="font-body text-gammaBodyText/50 text-xs mb-3">Agent sur mesure métier</p><ul class="space-y-1.5 text-xs"><li class="dot-li">Fonction entièrement personnalisée</li><li class="dot-li">Intégration native à votre stack</li><li class="dot-li">Support prioritaire inclus</li></ul></div>
         </div>
       </div>
     </div>
 
     <!-- Stacks -->
     <div class="reveal">
-      <div class="tag-violet mb-4 inline-flex"><span class="tag-dot"></span>Stacks stratégiques</div>
-      <h3 class="text-2xl font-bold text-white mb-8">Combinaisons d'agents pour des objectifs précis</h3>
+      <div class="tag mb-4"><span class="tag-dot"></span>Stacks stratégiques</div>
+      <h3 class="font-heading font-bold text-2xl text-white mb-8">Combinaisons pour des objectifs métiers précis</h3>
       <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="glass-card card-glow rounded-xl p-5 reveal"><div class="text-lg mb-2">📈</div><h4 class="text-white font-bold text-sm mb-2">Growth Stack</h4><p class="text-gray-600 text-xs mb-3">Startups, scale-ups en croissance</p><div class="flex flex-wrap gap-1"><span class="agent-pill">Lead</span><span class="agent-pill">Voice</span><span class="agent-pill">Marketing</span><span class="agent-pill">Care</span></div></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1"><div class="text-lg mb-2">⚙️</div><h4 class="text-white font-bold text-sm mb-2">Ops Stack</h4><p class="text-gray-600 text-xs mb-3">PME structurées, opérations complexes</p><div class="flex flex-wrap gap-1"><span class="agent-pill">Flow</span><span class="agent-pill">Admin</span><span class="agent-pill">Ops</span><span class="agent-pill">People</span></div></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-2"><div class="text-lg mb-2">🔐</div><h4 class="text-white font-bold text-sm mb-2">Secure Stack</h4><p class="text-gray-600 text-xs mb-3">Finance, santé, secteurs réglementés</p><div class="flex flex-wrap gap-1"><span class="agent-pill">Secure</span><span class="agent-pill">Legal</span><span class="agent-pill">Finance</span><span class="agent-pill">Data</span></div></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-3"><div class="text-lg mb-2">💬</div><h4 class="text-white font-bold text-sm mb-2">Support Stack</h4><p class="text-gray-600 text-xs mb-3">Services clients à fort volume</p><div class="flex flex-wrap gap-1"><span class="agent-pill">Care</span><span class="agent-pill">Voice</span><span class="agent-pill">Flow</span><span class="agent-pill">Insight</span></div></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-4"><div class="text-lg mb-2">🏢</div><h4 class="text-white font-bold text-sm mb-2">Enterprise Stack</h4><p class="text-gray-600 text-xs mb-3">Grandes organisations multi-sites</p><div class="flex flex-wrap gap-1"><span class="agent-pill">Control</span><span class="agent-pill">Flow</span><span class="agent-pill">Insight</span><span class="agent-pill">Finance</span></div></div>
+        <div class="g-card rounded-xl p-5 reveal"><span class="text-lg">📈</span><h4 class="font-heading font-bold text-white text-sm my-2">Growth Stack</h4><p class="font-body text-gammaBodyText/50 text-xs mb-3">Startups, scale-ups en croissance</p><div class="flex flex-wrap gap-1"><span class="pill">Lead</span><span class="pill">Voice</span><span class="pill">Marketing</span><span class="pill">Care</span></div></div>
+        <div class="g-card rounded-xl p-5 reveal d1"><span class="text-lg">⚙️</span><h4 class="font-heading font-bold text-white text-sm my-2">Ops Stack</h4><p class="font-body text-gammaBodyText/50 text-xs mb-3">PME structurées, opérations complexes</p><div class="flex flex-wrap gap-1"><span class="pill">Flow</span><span class="pill">Admin</span><span class="pill">Ops</span><span class="pill">People</span></div></div>
+        <div class="g-card rounded-xl p-5 reveal d2"><span class="text-lg">🔐</span><h4 class="font-heading font-bold text-white text-sm my-2">Secure Stack</h4><p class="font-body text-gammaBodyText/50 text-xs mb-3">Finance, santé, secteurs réglementés</p><div class="flex flex-wrap gap-1"><span class="pill">Secure</span><span class="pill">Legal</span><span class="pill">Finance</span><span class="pill">Data</span></div></div>
+        <div class="g-card rounded-xl p-5 reveal d3"><span class="text-lg">💬</span><h4 class="font-heading font-bold text-white text-sm my-2">Support Stack</h4><p class="font-body text-gammaBodyText/50 text-xs mb-3">Services clients à fort volume</p><div class="flex flex-wrap gap-1"><span class="pill">Care</span><span class="pill">Voice</span><span class="pill">Flow</span><span class="pill">Insight</span></div></div>
+        <div class="g-card rounded-xl p-5 reveal d4"><span class="text-lg">🏢</span><h4 class="font-heading font-bold text-white text-sm my-2">Enterprise Stack</h4><p class="font-body text-gammaBodyText/50 text-xs mb-3">Grandes organisations multi-sites</p><div class="flex flex-wrap gap-1"><span class="pill">Control</span><span class="pill">Flow</span><span class="pill">Finance</span><span class="pill">Data</span></div></div>
       </div>
     </div>
 
     <!-- Architecture CTA -->
-    <div class="mt-16 rounded-2xl p-8 md:p-12 text-center reveal" style="background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(192,132,252,0.06)); border:1px solid rgba(192,132,252,0.25); box-shadow:0 0 60px rgba(139,92,246,0.1);">
-      <h3 class="text-2xl md:text-3xl font-black text-white mb-4">Construisons votre architecture IA</h3>
-      <p class="text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed">Chaque entreprise a des besoins uniques. Les 16 agents AI TechLabs forment une architecture modulaire que nous adaptons à votre réalité opérationnelle.</p>
+    <div class="mt-14 rounded-2xl p-8 md:p-12 text-center reveal"
+         style="background:linear-gradient(135deg,rgba(169,91,149,.09),rgba(11,12,35,.9)); border:1px solid rgba(169,91,149,.25);">
+      <h3 class="font-heading font-bold text-2xl md:text-3xl text-white mb-4">Construisons votre architecture IA</h3>
+      <p class="font-body text-gammaBodyText/70 max-w-2xl mx-auto mb-8 leading-relaxed">Chaque entreprise a des besoins uniques. Les 16 agents AI TechLabs forment une architecture modulaire que nous adaptons à votre réalité opérationnelle.</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#contact" class="btn-violet text-white font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-2">
+        <a href="#contact" class="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl">
           <span>Demander une étude personnalisée</span>
         </a>
-        <a href="#contact" class="btn-outline-violet font-semibold px-8 py-4 rounded-xl flex items-center justify-center">
+        <a href="#contact" class="btn-outline inline-flex items-center justify-center px-8 py-4 rounded-xl">
           Échanger sur votre projet
         </a>
       </div>
@@ -905,114 +757,124 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════ TARIFS ═══════════════════════════════ -->
-<section id="tarifs" class="py-24 bg-black relative overflow-hidden">
-  <div class="orb orb-violet w-[450px] h-[450px] -top-20 right-0 opacity-20"></div>
+
+<!-- ══════════════════════════════════════ TARIFS ══════════════════════════════════════ -->
+<section id="tarifs" class="py-24 bg-gammaBg section-fade relative overflow-hidden">
+  <div class="orb orb-primary w-[400px] h-[400px] -top-20 right-0 opacity-18"></div>
 
   <div class="max-w-7xl mx-auto px-6">
-    <div class="tag-violet mb-4 reveal"><span class="tag-dot"></span>Tarification</div>
-    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 reveal reveal-delay-1">Nos offres</h2>
-    <p class="text-gray-400 text-lg max-w-3xl mb-16 leading-relaxed reveal reveal-delay-2">
+    <div class="tag mb-4 reveal"><span class="tag-dot"></span>Tarification</div>
+    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white mb-4 reveal d1">Nos offres</h2>
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed reveal d2">
       Livraison standard sous 5 à 7 jours ouvrables. Les agents sont livrés exploitables, documentés et avec formation incluse.
     </p>
 
-    <!-- Agents IA pricing -->
-    <h3 class="text-xl font-bold text-white mb-6 reveal">Agents IA — Niveaux d'exécution automatisée</h3>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-16">
-      <div class="glass-card card-glow rounded-2xl p-6 pricing-card reveal">
-        <div class="num-badge mb-4">1</div>
-        <h4 class="text-white font-bold mb-1">Starter</h4>
-        <p class="text-violet-400 font-black text-xl mb-3">1 500€ <span class="text-gray-600 font-normal text-sm">– 2 500€</span></p>
-        <p class="text-gray-600 text-xs leading-relaxed mb-4">Agent d'assistance simple pour tâches basiques et répétitives.</p>
+    <!-- Agent pricing -->
+    <h3 class="font-heading font-semibold text-white text-xl mb-5 reveal">Agents IA — Niveaux d'exécution automatisée</h3>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-14">
+
+      <div class="g-card rounded-2xl p-6 reveal transition-transform duration-300 hover:-translate-y-1">
+        <div class="num mb-4">1</div>
+        <h4 class="font-heading font-bold text-white mb-1">Starter</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">1 500€ <span class="text-gammaBodyText/40 font-body font-normal text-sm">– 2 500€</span></p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent d'assistance simple pour tâches basiques et répétitives.</p>
         <hr class="sep mb-4"/>
-        <ul class="space-y-2 text-xs text-gray-500">
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Livraison 5-7 jours</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Cadrage selon CDC</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Formation incluse</li>
+        <ul class="space-y-2 text-xs font-body">
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Livraison 5-7 jours</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Cadrage selon CDC</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Formation incluse</li>
         </ul>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 pricing-card reveal reveal-delay-1">
-        <div class="num-badge mb-4">2</div>
-        <h4 class="text-white font-bold mb-1">Essentiel</h4>
-        <p class="text-violet-400 font-black text-xl mb-3">2 500€ <span class="text-gray-600 font-normal text-sm">– 3 500€</span></p>
-        <p class="text-gray-600 text-xs leading-relaxed mb-4">Agent polyvalent pour processus métiers standards.</p>
+
+      <div class="g-card rounded-2xl p-6 reveal d1 transition-transform duration-300 hover:-translate-y-1">
+        <div class="num mb-4">2</div>
+        <h4 class="font-heading font-bold text-white mb-1">Essentiel</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">2 500€ <span class="text-gammaBodyText/40 font-body font-normal text-sm">– 3 500€</span></p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent polyvalent pour processus métiers standards.</p>
         <hr class="sep mb-4"/>
-        <ul class="space-y-2 text-xs text-gray-500">
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Livraison 5-7 jours</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Intégrations basiques</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Formation incluse</li>
+        <ul class="space-y-2 text-xs font-body">
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Livraison 5-7 jours</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Intégrations basiques</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Formation incluse</li>
         </ul>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 pricing-card pricing-featured reveal reveal-delay-2">
+
+      <!-- Featured -->
+      <div class="g-card rounded-2xl p-6 reveal d2 transition-transform duration-300 hover:-translate-y-1"
+           style="border-color:rgba(169,91,149,.5);box-shadow:0 0 40px rgba(169,91,149,.18);">
         <div class="flex justify-between items-start mb-4">
-          <div class="num-badge">3</div>
-          <span class="tag-violet text-xs">Populaire</span>
+          <div class="num">3</div>
+          <span class="tag text-xs">Populaire</span>
         </div>
-        <h4 class="text-white font-bold mb-1">Avancé</h4>
-        <p class="text-violet-400 font-black text-xl mb-3">3 500€ <span class="text-gray-600 font-normal text-sm">– 5 000€</span></p>
-        <p class="text-gray-600 text-xs leading-relaxed mb-4">Agent sophistiqué avec logique conditionnelle avancée.</p>
+        <h4 class="font-heading font-bold text-white mb-1">Avancé</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">3 500€ <span class="text-gammaBodyText/40 font-body font-normal text-sm">– 5 000€</span></p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent sophistiqué avec logique conditionnelle avancée.</p>
         <hr class="sep mb-4"/>
-        <ul class="space-y-2 text-xs text-gray-500">
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Livraison 5-7 jours</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Multi-scénarios</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Options sur mesure</li>
+        <ul class="space-y-2 text-xs font-body">
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Livraison 5-7 jours</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Multi-scénarios</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Options sur mesure</li>
         </ul>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 pricing-card reveal reveal-delay-3">
-        <div class="num-badge mb-4">4</div>
-        <h4 class="text-white font-bold mb-1">Signature</h4>
-        <p class="text-violet-400 font-black text-xl mb-3">5 000€ <span class="text-gray-600 font-normal text-sm">– 8 000€</span></p>
-        <p class="text-gray-600 text-xs leading-relaxed mb-4">Agent premium pour opérations critiques.</p>
+
+      <div class="g-card rounded-2xl p-6 reveal d3 transition-transform duration-300 hover:-translate-y-1">
+        <div class="num mb-4">4</div>
+        <h4 class="font-heading font-bold text-white mb-1">Signature</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">5 000€ <span class="text-gammaBodyText/40 font-body font-normal text-sm">– 8 000€</span></p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent premium pour opérations critiques.</p>
         <hr class="sep mb-4"/>
-        <ul class="space-y-2 text-xs text-gray-500">
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Sécurité renforcée</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Architecture robuste</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Formation incluse</li>
+        <ul class="space-y-2 text-xs font-body">
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Sécurité renforcée</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Architecture robuste</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Formation incluse</li>
         </ul>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 pricing-card reveal reveal-delay-4" style="border-color:rgba(192,132,252,0.35);box-shadow:0 0 30px rgba(139,92,246,0.15);">
-        <div class="num-badge mb-4" style="background:linear-gradient(135deg,#c084fc,#a855f7);">5</div>
-        <h4 class="text-white font-bold mb-1">Elite</h4>
-        <p class="text-violet-300 font-black text-xl mb-3">8 000€ <span class="text-gray-600 font-normal text-sm">– 12 000€</span></p>
-        <p class="text-gray-600 text-xs leading-relaxed mb-4">Agent d'excellence pour systèmes stratégiques.</p>
+
+      <div class="g-card rounded-2xl p-6 reveal d4 transition-transform duration-300 hover:-translate-y-1"
+           style="border-color:rgba(169,91,149,.35);">
+        <div class="num mb-4" style="background:linear-gradient(135deg,#A95B95,#C478AE);">5</div>
+        <h4 class="font-heading font-bold text-white mb-1">Elite</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">8 000€ <span class="text-gammaBodyText/40 font-body font-normal text-sm">– 12 000€</span></p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent d'excellence pour systèmes stratégiques.</p>
         <hr class="sep mb-4"/>
-        <ul class="space-y-2 text-xs text-gray-500">
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Architecture sur mesure</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Intelligence maximale</li>
-          <li class="flex gap-2"><span class="text-violet-400">✓</span>Standards institutionnels</li>
+        <ul class="space-y-2 text-xs font-body">
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Architecture sur mesure</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Intelligence maximale</li>
+          <li class="flex gap-2 text-gammaBodyText/60"><span class="text-gammaPrimary">✓</span>Standards institutionnels</li>
         </ul>
       </div>
+
     </div>
 
-    <!-- Sites + Apps -->
+    <!-- Apps + Sites -->
     <div class="grid md:grid-cols-2 gap-8 mb-12">
       <div class="reveal">
-        <h3 class="text-lg font-bold text-white mb-5">Applications web & mobile</h3>
+        <h3 class="font-heading font-semibold text-white text-lg mb-5">Applications web & mobile</h3>
         <div class="space-y-3">
-          <div class="glass-card card-glow rounded-xl p-5 flex justify-between items-center">
-            <div><p class="text-white font-semibold text-sm">Application Essentielle</p><p class="text-gray-600 text-xs mt-1">Interface claire, déploiement rapide.</p></div>
-            <span class="text-violet-400 font-bold text-sm ml-4 flex-shrink-0">2 000€ – 3 500€</span>
+          <div class="g-card rounded-xl p-5 flex justify-between items-center">
+            <div><p class="font-heading font-semibold text-white text-sm">Application Essentielle</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Interface claire, déploiement rapide.</p></div>
+            <span class="text-gammaPrimary font-heading font-bold text-sm ml-4 flex-shrink-0">2 000€ – 3 500€</span>
           </div>
-          <div class="glass-card card-glow rounded-xl p-5 flex justify-between items-center">
-            <div><p class="text-white font-semibold text-sm">Application Avancée</p><p class="text-gray-600 text-xs mt-1">Logiques complexes, intégrations multiples.</p></div>
-            <span class="text-violet-400 font-bold text-sm ml-4 flex-shrink-0">3 500€ – 6 000€</span>
+          <div class="g-card rounded-xl p-5 flex justify-between items-center">
+            <div><p class="font-heading font-semibold text-white text-sm">Application Avancée</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Logiques complexes, intégrations multiples.</p></div>
+            <span class="text-gammaPrimary font-heading font-bold text-sm ml-4 flex-shrink-0">3 500€ – 6 000€</span>
           </div>
         </div>
       </div>
-      <div class="reveal reveal-delay-1">
-        <h3 class="text-lg font-bold text-white mb-5">Sites internet & landing pages</h3>
+      <div class="reveal d1">
+        <h3 class="font-heading font-semibold text-white text-lg mb-5">Sites internet & landing pages</h3>
         <div class="space-y-3">
-          <div class="glass-card card-glow rounded-xl p-4 flex justify-between items-center">
-            <div><p class="text-white font-semibold text-sm">Landing page de conversion</p><p class="text-gray-600 text-xs mt-1">Message ciblé, CTA optimisé.</p></div>
-            <span class="text-violet-400 font-bold text-sm ml-4 flex-shrink-0">à partir de 1 200€</span>
+          <div class="g-card rounded-xl p-4 flex justify-between items-center">
+            <div><p class="font-heading font-semibold text-white text-sm">Landing page de conversion</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Message ciblé, CTA optimisé.</p></div>
+            <span class="text-gammaPrimary font-heading font-bold text-sm ml-4 flex-shrink-0">à partir de 1 200€</span>
           </div>
-          <div class="glass-card card-glow rounded-xl p-4 flex justify-between items-center">
-            <div><p class="text-white font-semibold text-sm">Site vitrine standard</p><p class="text-gray-600 text-xs mt-1">Jusqu'à 5 pages, responsive.</p></div>
-            <span class="text-violet-400 font-bold text-sm ml-4 flex-shrink-0">2 000€ – 3 500€</span>
+          <div class="g-card rounded-xl p-4 flex justify-between items-center">
+            <div><p class="font-heading font-semibold text-white text-sm">Site vitrine standard</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Jusqu'à 5 pages, responsive.</p></div>
+            <span class="text-gammaPrimary font-heading font-bold text-sm ml-4 flex-shrink-0">2 000€ – 3 500€</span>
           </div>
-          <div class="glass-card card-glow rounded-xl p-4 flex justify-between items-center">
-            <div><p class="text-white font-semibold text-sm">Site vitrine premium</p><p class="text-gray-600 text-xs mt-1">Identité forte, animations subtiles.</p></div>
-            <span class="text-violet-400 font-bold text-sm ml-4 flex-shrink-0">3 500€ – 6 000€</span>
+          <div class="g-card rounded-xl p-4 flex justify-between items-center">
+            <div><p class="font-heading font-semibold text-white text-sm">Site vitrine premium</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Identité forte, animations subtiles.</p></div>
+            <span class="text-gammaPrimary font-heading font-bold text-sm ml-4 flex-shrink-0">3 500€ – 6 000€</span>
           </div>
         </div>
       </div>
@@ -1020,323 +882,323 @@
 
     <!-- Maintenance -->
     <div class="reveal">
-      <div class="tag-violet mb-4 inline-flex"><span class="tag-dot"></span>Maintenance mensuelle</div>
-      <h3 class="text-lg font-bold text-white mb-5">Plans de continuité</h3>
+      <div class="tag mb-4"><span class="tag-dot"></span>Continuité</div>
+      <h3 class="font-heading font-semibold text-white text-lg mb-5">Plans de maintenance mensuelle</h3>
       <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="glass-card card-glow rounded-xl p-5 reveal"><h4 class="text-white font-bold text-sm mb-1">Essentielle</h4><p class="text-violet-400 font-black text-lg mb-2">150€<span class="text-gray-600 font-normal text-xs">/mois</span></p><p class="text-gray-600 text-xs">Surveillance mensuelle, support email 48h.</p></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-1"><h4 class="text-white font-bold text-sm mb-1">Standard</h4><p class="text-violet-400 font-black text-lg mb-2">250€<span class="text-gray-600 font-normal text-xs">/mois</span></p><p class="text-gray-600 text-xs">Surveillance hebdo, support prioritaire 24h.</p></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-2"><h4 class="text-white font-bold text-sm mb-1">Pro</h4><p class="text-violet-400 font-black text-lg mb-2">350€<span class="text-gray-600 font-normal text-xs">/mois</span></p><p class="text-gray-600 text-xs">Surveillance continue, support 12h.</p></div>
-        <div class="glass-card card-glow rounded-xl p-5 pricing-featured reveal reveal-delay-3"><h4 class="text-white font-bold text-sm mb-1">Signature</h4><p class="text-violet-400 font-black text-lg mb-2">450€<span class="text-gray-600 font-normal text-xs">/mois</span></p><p class="text-gray-600 text-xs">Surveillance 24/7, conseil trimestriel.</p></div>
-        <div class="glass-card card-glow rounded-xl p-5 reveal reveal-delay-4" style="border-color:rgba(192,132,252,0.3);"><h4 class="text-white font-bold text-sm mb-1">Elite</h4><p class="text-violet-300 font-black text-lg mb-2">500€<span class="text-gray-600 font-normal text-xs">/mois</span></p><p class="text-gray-600 text-xs">Accompagnement stratégique continu.</p></div>
+        <div class="g-card rounded-xl p-5 reveal transition-transform duration-300 hover:-translate-y-1"><h4 class="font-heading font-bold text-white text-sm mb-1">Essentielle</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-2">150€<span class="text-gammaBodyText/40 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/55 text-xs">Surveillance mensuelle, support email 48h.</p></div>
+        <div class="g-card rounded-xl p-5 reveal d1 transition-transform duration-300 hover:-translate-y-1"><h4 class="font-heading font-bold text-white text-sm mb-1">Standard</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-2">250€<span class="text-gammaBodyText/40 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/55 text-xs">Surveillance hebdo, support prioritaire 24h.</p></div>
+        <div class="g-card rounded-xl p-5 reveal d2 transition-transform duration-300 hover:-translate-y-1"><h4 class="font-heading font-bold text-white text-sm mb-1">Pro</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-2">350€<span class="text-gammaBodyText/40 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/55 text-xs">Surveillance continue, support 12h.</p></div>
+        <div class="g-card rounded-xl p-5 reveal d3 transition-transform duration-300 hover:-translate-y-1"
+             style="border-color:rgba(169,91,149,.4);box-shadow:0 0 30px rgba(169,91,149,.14);"><h4 class="font-heading font-bold text-white text-sm mb-1">Signature</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-2">450€<span class="text-gammaBodyText/40 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/55 text-xs">Surveillance 24/7, conseil trimestriel.</p></div>
+        <div class="g-card rounded-xl p-5 reveal d4 transition-transform duration-300 hover:-translate-y-1"
+             style="border-color:rgba(169,91,149,.3);"><h4 class="font-heading font-bold text-white text-sm mb-1">Elite</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-2">500€<span class="text-gammaBodyText/40 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/55 text-xs">Accompagnement stratégique continu.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ PROCESSUS ═══════════════════════════════ -->
-<section id="processus" class="py-24 grid-bg relative overflow-hidden">
-  <div class="orb orb-pink w-[350px] h-[350px] -bottom-20 left-1/2 opacity-20"></div>
+
+<!-- ══════════════════════════════════════ PROCESSUS ══════════════════════════════════════ -->
+<section id="processus" class="py-24 section-fade grid-bg relative overflow-hidden">
+  <div class="orb orb-primary w-80 h-80 bottom-0 left-1/2 -translate-x-1/2 opacity-18"></div>
 
   <div class="max-w-7xl mx-auto px-6">
-    <div class="tag-violet mb-4 reveal"><span class="tag-dot"></span>Processus de travail</div>
-    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 reveal reveal-delay-1">
-      Une méthodologie <span class="gradient-text-violet">éprouvée</span>
+    <div class="tag mb-4 reveal"><span class="tag-dot"></span>Processus</div>
+    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white mb-4 reveal d1">
+      Une méthodologie <span class="g-text-pink">éprouvée</span>
     </h2>
-    <p class="text-gray-400 text-lg max-w-3xl mb-16 leading-relaxed reveal reveal-delay-2">
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed reveal d2">
       Chaque étape fait l'objet d'une validation formelle avant passage à la suivante. Transparence, prévisibilité et alignement continu.
     </p>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <div class="glass-card card-glow rounded-2xl p-6 reveal">
-        <div class="flex items-center gap-3 mb-4"><div class="num-badge">1</div><h3 class="text-white font-bold">Écoute et cadrage</h3></div>
-        <p class="text-gray-500 text-sm leading-relaxed">Compréhension approfondie de vos enjeux métiers et objectifs opérationnels.</p>
-      </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-1">
-        <div class="flex items-center gap-3 mb-4"><div class="num-badge">2</div><h3 class="text-white font-bold">Validation du périmètre</h3></div>
-        <p class="text-gray-500 text-sm leading-relaxed">Définition précise des fonctionnalités, livrables et critères de succès.</p>
-      </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-2">
-        <div class="flex items-center gap-3 mb-4"><div class="num-badge">3</div><h3 class="text-white font-bold">Contractualisation</h3></div>
-        <p class="text-gray-500 text-sm leading-relaxed">Formalisation claire des engagements, délais et modalités de collaboration.</p>
-      </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-3">
-        <div class="flex items-center gap-3 mb-4"><div class="num-badge">4</div><h3 class="text-white font-bold">Conception et développement</h3></div>
-        <p class="text-gray-500 text-sm leading-relaxed">Réalisation technique selon méthodologie éprouvée et standards qualité.</p>
-      </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-4">
-        <div class="flex items-center gap-3 mb-4"><div class="num-badge">5</div><h3 class="text-white font-bold">Tests et validation</h3></div>
-        <p class="text-gray-500 text-sm leading-relaxed">Vérification exhaustive de la conformité et de la performance système.</p>
-      </div>
-      <div class="glass-card card-glow rounded-2xl p-6 reveal reveal-delay-5" style="border-color:rgba(192,132,252,0.3);">
-        <div class="flex items-center gap-3 mb-4"><div class="num-badge">6</div><h3 class="text-white font-bold">Livraison et transfert</h3></div>
-        <p class="text-gray-500 text-sm leading-relaxed">Mise en production, documentation complète et formation utilisateur.</p>
-      </div>
+      <div class="g-card rounded-2xl p-6 reveal"><div class="flex items-center gap-3 mb-4"><div class="num">1</div><h3 class="font-heading font-semibold text-white">Écoute et cadrage</h3></div><p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Compréhension approfondie de vos enjeux métiers et objectifs opérationnels.</p></div>
+      <div class="g-card rounded-2xl p-6 reveal d1"><div class="flex items-center gap-3 mb-4"><div class="num">2</div><h3 class="font-heading font-semibold text-white">Validation du périmètre</h3></div><p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Définition précise des fonctionnalités, livrables et critères de succès.</p></div>
+      <div class="g-card rounded-2xl p-6 reveal d2"><div class="flex items-center gap-3 mb-4"><div class="num">3</div><h3 class="font-heading font-semibold text-white">Contractualisation</h3></div><p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Formalisation claire des engagements, délais et modalités de collaboration.</p></div>
+      <div class="g-card rounded-2xl p-6 reveal d3"><div class="flex items-center gap-3 mb-4"><div class="num">4</div><h3 class="font-heading font-semibold text-white">Conception & développement</h3></div><p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Réalisation technique selon méthodologie éprouvée et standards qualité.</p></div>
+      <div class="g-card rounded-2xl p-6 reveal d4"><div class="flex items-center gap-3 mb-4"><div class="num">5</div><h3 class="font-heading font-semibold text-white">Tests et validation</h3></div><p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Vérification exhaustive de la conformité et de la performance système.</p></div>
+      <div class="g-card rounded-2xl p-6 reveal d5" style="border-color:rgba(169,91,149,.3);"><div class="flex items-center gap-3 mb-4"><div class="num">6</div><h3 class="font-heading font-semibold text-white">Livraison et transfert</h3></div><p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Mise en production, documentation complète et formation utilisateur.</p></div>
     </div>
 
-    <!-- Quote block -->
-    <div class="mt-16 grid md:grid-cols-2 gap-6">
-      <div class="glass-card rounded-2xl p-8 reveal">
-        <h3 class="text-xl font-bold text-white mb-4">Cadre et responsabilité</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">Nous nous engageons sur la qualité technique, la conformité fonctionnelle et la fiabilité opérationnelle. <strong class="text-white">Les résultats métiers restent sous votre contrôle.</strong></p>
+    <div class="mt-12 grid md:grid-cols-2 gap-6">
+      <div class="g-card rounded-2xl p-8 reveal">
+        <h3 class="font-heading font-bold text-white text-xl mb-4">Cadre et responsabilité</h3>
+        <p class="font-body text-gammaBodyText/65 text-[.88rem] leading-relaxed">Nous nous engageons sur la qualité technique, la conformité fonctionnelle et la fiabilité opérationnelle. <strong class="text-white">Les résultats métiers restent sous votre contrôle et votre responsabilité.</strong></p>
       </div>
-      <div class="rounded-2xl p-8 flex flex-col justify-center text-center reveal reveal-delay-1" style="background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(192,132,252,0.06)); border:1px solid rgba(192,132,252,0.2);">
-        <p class="text-2xl font-black text-white mb-3">La technologie est un levier</p>
-        <div class="w-10 h-px mx-auto mb-3" style="background:linear-gradient(90deg,#9333ea,#c084fc);"></div>
-        <p class="text-violet-400 font-bold">La direction reste humaine</p>
-        <p class="text-gray-500 text-sm mt-3">Nous créons les instruments. Vous orchestrez la performance.</p>
+      <div class="rounded-2xl p-8 flex flex-col justify-center text-center reveal d1"
+           style="background:linear-gradient(135deg,rgba(169,91,149,.09),rgba(11,12,35,.9));border:1px solid rgba(169,91,149,.22);">
+        <p class="font-heading font-bold text-white text-2xl mb-3">La technologie est un levier</p>
+        <div class="w-10 h-px mx-auto mb-3" style="background:linear-gradient(90deg,#7B3D6B,#A95B95);"></div>
+        <p class="text-gammaPrimary font-heading font-semibold">La direction reste humaine</p>
+        <p class="font-body text-gammaBodyText/55 text-sm mt-3">Nous créons les instruments. Vous orchestrez la performance.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ CTA SECTION ═══════════════════════════════ -->
-<section class="py-24 bg-black relative overflow-hidden">
-  <div class="orb orb-violet w-[600px] h-[600px] -top-32 left-1/2 -translate-x-1/2 opacity-20"></div>
+
+<!-- ══════════════════════════════════════ CTA INTERSTITIELLE ══════════════════════════════════════ -->
+<section class="py-24 bg-gammaBg relative overflow-hidden">
+  <div class="orb orb-primary w-[550px] h-[550px] -top-20 left-1/2 -translate-x-1/2 opacity-18"></div>
   <div class="relative max-w-4xl mx-auto px-6 text-center">
-    <div class="tag-violet mb-6 inline-flex reveal"><span class="tag-dot"></span>Prenons contact</div>
-    <h2 class="font-black text-white mb-6 leading-tight reveal reveal-delay-1" style="font-size:clamp(2.5rem,6vw,4.5rem);">
+    <div class="tag mb-6 inline-flex reveal"><span class="tag-dot"></span>Prenons contact</div>
+    <h2 class="font-heading font-extrabold text-white leading-tight mb-6 reveal d1"
+        style="font-size:clamp(2.5rem,6vw,4.5rem);">
       Approche confidentielle,<br/>
-      <span class="gradient-text-violet">professionnelle et sur mesure.</span>
+      <span class="g-text-pink">professionnelle et sur mesure.</span>
     </h2>
-    <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto leading-relaxed reveal reveal-delay-2">
+    <p class="font-body text-gammaBodyText text-lg max-w-2xl mx-auto mb-12 leading-relaxed reveal d2">
       Nous privilégions les échanges simples, précis et utiles. Si votre besoin est sérieux, la réponse le sera aussi.
     </p>
-    <div class="grid sm:grid-cols-3 gap-5 mb-10 reveal reveal-delay-3">
-      <div class="glass-card card-glow rounded-2xl p-6 text-left">
+    <div class="grid sm:grid-cols-3 gap-5 reveal d3">
+      <div class="g-card rounded-2xl p-6 text-left">
         <div class="text-2xl mb-3">💬</div>
-        <h3 class="text-white font-bold text-sm mb-2">Échanger sur un projet</h3>
-        <p class="text-gray-600 text-xs leading-relaxed">Discussion exploratoire sans engagement pour comprendre vos enjeux.</p>
+        <h3 class="font-heading font-bold text-white text-sm mb-2">Échanger sur un projet</h3>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed">Discussion exploratoire sans engagement pour comprendre vos enjeux.</p>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 text-left" style="border-color:rgba(192,132,252,0.3);">
+      <div class="g-card rounded-2xl p-6 text-left" style="border-color:rgba(169,91,149,.35);">
         <div class="text-2xl mb-3">📋</div>
-        <h3 class="text-white font-bold text-sm mb-2">Demander une étude</h3>
-        <p class="text-gray-600 text-xs leading-relaxed">Analyse approfondie avec proposition détaillée et chiffrée.</p>
+        <h3 class="font-heading font-bold text-white text-sm mb-2">Demander une étude</h3>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed">Analyse approfondie avec proposition détaillée et chiffrée.</p>
       </div>
-      <div class="glass-card card-glow rounded-2xl p-6 text-left">
+      <div class="g-card rounded-2xl p-6 text-left">
         <div class="text-2xl mb-3">🔍</div>
-        <h3 class="text-white font-bold text-sm mb-2">Réserver un audit — 500€</h3>
-        <p class="text-gray-600 text-xs leading-relaxed">Évaluation de votre maturité digitale avec rapport actionnable.</p>
+        <h3 class="font-heading font-bold text-white text-sm mb-2">Réserver un audit — 500€</h3>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed">Évaluation de votre maturité digitale avec rapport PDF actionnable.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ CONTACT ═══════════════════════════════ -->
-<section id="contact" class="py-24 grid-bg relative overflow-hidden">
-  <div class="orb orb-violet w-[400px] h-[400px] bottom-0 right-0 opacity-20"></div>
+
+<!-- ══════════════════════════════════════ CONTACT ══════════════════════════════════════ -->
+<section id="contact" class="py-24 section-fade grid-bg relative overflow-hidden">
+  <div class="orb orb-primary w-96 h-96 bottom-0 right-0 opacity-20"></div>
 
   <div class="max-w-3xl mx-auto px-6">
-    <div class="tag-violet mb-4 text-center block reveal"><span class="tag-dot"></span>Contact</div>
-    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 text-center reveal reveal-delay-1">Travaillons ensemble</h2>
-    <p class="text-gray-400 text-center mb-12 leading-relaxed reveal reveal-delay-2">
-      Remplissez ce formulaire et nous vous répondrons dans les 24 heures.
+    <div class="tag mb-4 text-center block reveal"><span class="tag-dot"></span>Contact</div>
+    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white text-center mb-4 reveal d1">Travaillons ensemble</h2>
+    <p class="font-body text-gammaBodyText text-center mb-12 leading-relaxed reveal d2">
+      Remplissez ce formulaire et nous vous répondrons dans les 24 heures avec une approche adaptée.
     </p>
 
-    <form class="glass-card rounded-2xl p-8 md:p-10 space-y-6 reveal" onsubmit="handleSubmit(event)" style="box-shadow:0 0 60px rgba(139,92,246,0.1);">
+    <form class="g-card rounded-2xl p-8 md:p-10 space-y-6 reveal"
+          onsubmit="handleSubmit(event)"
+          style="box-shadow:0 0 60px rgba(169,91,149,.09);">
+
       <div class="grid sm:grid-cols-2 gap-5">
         <div>
-          <label class="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">Prénom & Nom *</label>
+          <label class="block font-body font-semibold text-gammaBodyText/55 text-xs uppercase tracking-wider mb-2">Prénom & Nom *</label>
           <input type="text" required placeholder="Jean Dupont"
-            class="w-full bg-black/60 border rounded-xl px-4 py-3 text-white placeholder-gray-700 text-sm focus:outline-none transition-all"
-            style="border-color:rgba(192,132,252,0.2);"
-            onfocus="this.style.borderColor='rgba(192,132,252,0.6)'; this.style.boxShadow='0 0 16px rgba(192,132,252,0.15)'"
-            onblur="this.style.borderColor='rgba(192,132,252,0.2)'; this.style.boxShadow='none'"
+            class="w-full rounded-xl px-4 py-3 text-white text-sm font-body outline-none transition-all"
+            style="background:rgba(5,5,10,.8); border:1px solid rgba(169,91,149,.2); color:#DAD8E9;"
+            onfocus="this.style.borderColor='rgba(169,91,149,.65)'; this.style.boxShadow='0 0 14px rgba(169,91,149,.14)'"
+            onblur="this.style.borderColor='rgba(169,91,149,.2)'; this.style.boxShadow='none'"
           />
         </div>
         <div>
-          <label class="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">Entreprise</label>
+          <label class="block font-body font-semibold text-gammaBodyText/55 text-xs uppercase tracking-wider mb-2">Entreprise</label>
           <input type="text" placeholder="Votre société"
-            class="w-full bg-black/60 border rounded-xl px-4 py-3 text-white placeholder-gray-700 text-sm focus:outline-none transition-all"
-            style="border-color:rgba(192,132,252,0.2);"
-            onfocus="this.style.borderColor='rgba(192,132,252,0.6)'; this.style.boxShadow='0 0 16px rgba(192,132,252,0.15)'"
-            onblur="this.style.borderColor='rgba(192,132,252,0.2)'; this.style.boxShadow='none'"
+            class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none transition-all"
+            style="background:rgba(5,5,10,.8); border:1px solid rgba(169,91,149,.2); color:#DAD8E9;"
+            onfocus="this.style.borderColor='rgba(169,91,149,.65)'; this.style.boxShadow='0 0 14px rgba(169,91,149,.14)'"
+            onblur="this.style.borderColor='rgba(169,91,149,.2)'; this.style.boxShadow='none'"
           />
         </div>
       </div>
+
       <div>
-        <label class="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">Email professionnel *</label>
+        <label class="block font-body font-semibold text-gammaBodyText/55 text-xs uppercase tracking-wider mb-2">Email professionnel *</label>
         <input type="email" required placeholder="jean@votresociete.com"
-          class="w-full bg-black/60 border rounded-xl px-4 py-3 text-white placeholder-gray-700 text-sm focus:outline-none transition-all"
-          style="border-color:rgba(192,132,252,0.2);"
-          onfocus="this.style.borderColor='rgba(192,132,252,0.6)'; this.style.boxShadow='0 0 16px rgba(192,132,252,0.15)'"
-          onblur="this.style.borderColor='rgba(192,132,252,0.2)'; this.style.boxShadow='none'"
+          class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none transition-all"
+          style="background:rgba(5,5,10,.8); border:1px solid rgba(169,91,149,.2); color:#DAD8E9;"
+          onfocus="this.style.borderColor='rgba(169,91,149,.65)'; this.style.boxShadow='0 0 14px rgba(169,91,149,.14)'"
+          onblur="this.style.borderColor='rgba(169,91,149,.2)'; this.style.boxShadow='none'"
         />
       </div>
+
       <div>
-        <label class="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">Type de demande *</label>
+        <label class="block font-body font-semibold text-gammaBodyText/55 text-xs uppercase tracking-wider mb-2">Type de demande *</label>
         <select required
-          class="w-full bg-black/60 border rounded-xl px-4 py-3 text-white text-sm focus:outline-none appearance-none cursor-pointer transition-all"
-          style="border-color:rgba(192,132,252,0.2);"
-          onfocus="this.style.borderColor='rgba(192,132,252,0.6)'"
-          onblur="this.style.borderColor='rgba(192,132,252,0.2)'"
+          class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none cursor-pointer transition-all appearance-none"
+          style="background:rgba(5,5,10,.8); border:1px solid rgba(169,91,149,.2); color:#DAD8E9;"
+          onfocus="this.style.borderColor='rgba(169,91,149,.65)'"
+          onblur="this.style.borderColor='rgba(169,91,149,.2)'"
         >
-          <option value="" disabled selected class="bg-gray-900">Sélectionnez votre besoin</option>
-          <option class="bg-gray-900">Échanger sur un projet</option>
-          <option class="bg-gray-900">Demander une étude</option>
-          <option class="bg-gray-900">Réserver un audit stratégique (500€)</option>
-          <option class="bg-gray-900">Agent IA sur mesure</option>
-          <option class="bg-gray-900">Application web / mobile</option>
-          <option class="bg-gray-900">Site internet professionnel</option>
-          <option class="bg-gray-900">Automatisation & workflows</option>
-          <option class="bg-gray-900">Architecture multi-agents</option>
+          <option value="" disabled selected style="background:#0B0C23">Sélectionnez votre besoin</option>
+          <option style="background:#0B0C23">Échanger sur un projet</option>
+          <option style="background:#0B0C23">Demander une étude</option>
+          <option style="background:#0B0C23">Réserver un audit stratégique (500€)</option>
+          <option style="background:#0B0C23">Agent IA sur mesure</option>
+          <option style="background:#0B0C23">Application web / mobile</option>
+          <option style="background:#0B0C23">Site internet professionnel</option>
+          <option style="background:#0B0C23">Automatisation & workflows</option>
+          <option style="background:#0B0C23">Architecture multi-agents</option>
         </select>
       </div>
+
       <div>
-        <label class="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">Décrivez votre projet *</label>
+        <label class="block font-body font-semibold text-gammaBodyText/55 text-xs uppercase tracking-wider mb-2">Décrivez votre projet *</label>
         <textarea rows="5" required placeholder="Décrivez votre besoin, vos enjeux et vos objectifs..."
-          class="w-full bg-black/60 border rounded-xl px-4 py-3 text-white placeholder-gray-700 text-sm focus:outline-none resize-none transition-all"
-          style="border-color:rgba(192,132,252,0.2);"
-          onfocus="this.style.borderColor='rgba(192,132,252,0.6)'; this.style.boxShadow='0 0 16px rgba(192,132,252,0.15)'"
-          onblur="this.style.borderColor='rgba(192,132,252,0.2)'; this.style.boxShadow='none'"
+          class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none resize-none transition-all"
+          style="background:rgba(5,5,10,.8); border:1px solid rgba(169,91,149,.2); color:#DAD8E9;"
+          onfocus="this.style.borderColor='rgba(169,91,149,.65)'; this.style.boxShadow='0 0 14px rgba(169,91,149,.14)'"
+          onblur="this.style.borderColor='rgba(169,91,149,.2)'; this.style.boxShadow='none'"
         ></textarea>
       </div>
+
       <button type="submit" id="submit-btn"
-        class="btn-violet w-full text-white font-bold py-4 rounded-xl text-base flex items-center justify-center gap-2">
+        class="btn-primary w-full py-4 rounded-xl text-base flex items-center justify-center gap-2">
         <span id="btn-text">Envoyer ma demande</span>
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" id="btn-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        <svg id="btn-icon" class="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+        </svg>
       </button>
-      <div id="form-success" class="hidden rounded-xl p-4 text-center" style="background:rgba(139,92,246,0.1);border:1px solid rgba(192,132,252,0.3);">
-        <p class="text-violet-400 font-semibold text-sm">✓ Message envoyé. Nous vous répondrons sous 24h.</p>
+
+      <div id="form-success" class="hidden rounded-xl p-4 text-center"
+           style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.3);">
+        <p class="font-heading font-semibold text-gammaPrimary text-sm">✓ Message envoyé. Nous vous répondrons sous 24h.</p>
       </div>
-      <p class="text-gray-700 text-xs text-center">Échange confidentiel · Aucun engagement · Réponse sous 24h</p>
+
+      <p class="font-body text-gammaBodyText/35 text-xs text-center">Échange confidentiel · Aucun engagement · Réponse sous 24h</p>
     </form>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
-<footer class="bg-black border-t sep py-12">
+
+<!-- ══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<footer class="bg-gammaBg border-t sep py-12">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
+
       <!-- Logo -->
       <a href="#hero" class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#7c3aed,#c084fc);box-shadow:0 0 14px rgba(192,132,252,0.4);">
-          <span class="text-white font-black text-xs">AI</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+             style="background:linear-gradient(135deg,#7B3D6B,#A95B95);box-shadow:0 0 12px rgba(169,91,149,.45);">
+          <span class="font-heading font-bold text-xs text-white">AI</span>
         </div>
         <div>
-          <span class="font-black text-base text-white">AI<span class="text-violet-400">Tech</span>Labs</span>
-          <p class="text-gray-700 text-xs">Intelligence artificielle & systèmes digitaux</p>
+          <p class="font-heading font-bold text-white text-base leading-none">AI<span class="text-gammaPrimary">Tech</span>Labs</p>
+          <p class="font-body text-gammaBodyText/40 text-xs mt-0.5">Intelligence artificielle & systèmes digitaux</p>
         </div>
       </a>
 
-      <!-- Links -->
+      <!-- Nav links -->
       <div class="flex flex-wrap gap-5 justify-center">
-        <a href="#services"     class="text-gray-600 hover:text-white text-sm transition-colors">Services</a>
-        <a href="#architecture" class="text-gray-600 hover:text-white text-sm transition-colors">Architecture IA</a>
-        <a href="#tarifs"       class="text-gray-600 hover:text-white text-sm transition-colors">Tarifs</a>
-        <a href="#processus"    class="text-gray-600 hover:text-white text-sm transition-colors">Processus</a>
-        <a href="#contact"      class="text-gray-600 hover:text-white text-sm transition-colors">Contact</a>
-        <a href="https://aitechlabs.com" target="_blank" rel="noopener" class="text-violet-500 hover:text-violet-400 text-sm transition-colors font-medium">aitechlabs.com ↗</a>
+        <a href="#services"     class="font-body text-gammaBodyText/55 hover:text-white text-sm transition-colors">Services</a>
+        <a href="#architecture" class="font-body text-gammaBodyText/55 hover:text-white text-sm transition-colors">Architecture IA</a>
+        <a href="#tarifs"       class="font-body text-gammaBodyText/55 hover:text-white text-sm transition-colors">Tarifs</a>
+        <a href="#processus"    class="font-body text-gammaBodyText/55 hover:text-white text-sm transition-colors">Processus</a>
+        <a href="#contact"      class="font-body text-gammaBodyText/55 hover:text-white text-sm transition-colors">Contact</a>
+        <a href="https://aitechlabs.com" target="_blank" rel="noopener"
+           class="font-body font-semibold text-gammaPrimary hover:text-white text-sm transition-colors">aitechlabs.com ↗</a>
       </div>
 
-      <!-- Social icons -->
+      <!-- Social -->
       <div class="flex items-center gap-3">
         <a href="https://aitechlabs.com" target="_blank" rel="noopener" aria-label="LinkedIn"
            class="w-9 h-9 rounded-lg flex items-center justify-center transition-all"
-           style="border:1px solid rgba(192,132,252,0.15);background:rgba(139,92,246,0.06);"
-           onmouseover="this.style.borderColor='rgba(192,132,252,0.5)'; this.style.boxShadow='0 0 14px rgba(192,132,252,0.2)'"
-           onmouseout="this.style.borderColor='rgba(192,132,252,0.15)'; this.style.boxShadow='none'">
-          <svg class="w-4 h-4 text-violet-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+           style="border:1px solid rgba(169,91,149,.18);background:rgba(169,91,149,.06);"
+           onmouseover="this.style.borderColor='rgba(169,91,149,.55)'; this.style.boxShadow='0 0 12px rgba(169,91,149,.22)'"
+           onmouseout="this.style.borderColor='rgba(169,91,149,.18)'; this.style.boxShadow='none'">
+          <svg class="w-4 h-4 text-gammaPrimary" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
         </a>
         <a href="mailto:contact@aitechlabs.com" aria-label="Email"
            class="w-9 h-9 rounded-lg flex items-center justify-center transition-all"
-           style="border:1px solid rgba(192,132,252,0.15);background:rgba(139,92,246,0.06);"
-           onmouseover="this.style.borderColor='rgba(192,132,252,0.5)'; this.style.boxShadow='0 0 14px rgba(192,132,252,0.2)'"
-           onmouseout="this.style.borderColor='rgba(192,132,252,0.15)'; this.style.boxShadow='none'">
-          <svg class="w-4 h-4 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+           style="border:1px solid rgba(169,91,149,.18);background:rgba(169,91,149,.06);"
+           onmouseover="this.style.borderColor='rgba(169,91,149,.55)'; this.style.boxShadow='0 0 12px rgba(169,91,149,.22)'"
+           onmouseout="this.style.borderColor='rgba(169,91,149,.18)'; this.style.boxShadow='none'">
+          <svg class="w-4 h-4 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
         </a>
       </div>
     </div>
 
     <div class="border-t sep pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-      <p class="text-gray-700 text-xs">© 2024 AI TechLabs — Intelligence artificielle et systèmes digitaux pensés pour l'exécution réelle, au service de votre excellence opérationnelle.</p>
-      <a href="https://aitechlabs.com" target="_blank" rel="noopener" class="text-gray-700 hover:text-violet-400 text-xs transition-colors">aitechlabs.com</a>
+      <p class="font-body text-gammaBodyText/30 text-xs">© 2024 AI TechLabs — Intelligence artificielle et systèmes digitaux pensés pour l'exécution réelle, au service de votre excellence opérationnelle.</p>
+      <a href="https://aitechlabs.com" target="_blank" rel="noopener"
+         class="font-body text-gammaBodyText/30 hover:text-gammaPrimary text-xs transition-colors">aitechlabs.com</a>
     </div>
   </div>
 </footer>
 
-<!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
-<script>
-  /* ── Mobile Menu ── */
-  const menuBtn = document.getElementById('menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-  function closeMobileMenu() { mobileMenu.classList.remove('open'); }
 
-  /* ── Navbar dynamic background on scroll ── */
-  const navbar = document.getElementById('navbar');
+<!-- ══════════════════════════════════════ JAVASCRIPT ══════════════════════════════════════ -->
+<script>
+  /* ── Mobile menu ── */
+  document.getElementById('ham').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  });
+  function closeMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+  }
+
+  /* ── Navbar opacity on scroll ── */
+  const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
-    navbar.style.background = window.scrollY > 60
-      ? 'rgba(0,0,0,0.96)'
-      : 'rgba(0,0,0,0.75)';
+    nav.style.background = window.scrollY > 55
+      ? 'rgba(5,5,10,.97)'
+      : 'rgba(5,5,10,.82)';
   }, { passive: true });
 
-  /* ── IntersectionObserver — Scroll Reveal ── */
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target); // animate once
+  /* ── IntersectionObserver — Scroll reveal ── */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealObs.unobserve(e.target);
       }
     });
-  }, {
-    threshold: 0.08,
-    rootMargin: '0px 0px -40px 0px'
-  });
+  }, { threshold: 0.07, rootMargin: '0px 0px -36px 0px' });
 
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-  /* ── Graph line animation on scroll ── */
-  const graphObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const path = document.getElementById('graph-path');
-        if (path) path.classList.add('drawn');
-        graphObserver.unobserve(entry.target);
+  /* ── Graph path animation ── */
+  const graphObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.getElementById('gpath').classList.add('drawn');
+        graphObs.unobserve(e.target);
       }
     });
   }, { threshold: 0.5 });
+  const gw = document.getElementById('graph-wrap');
+  if (gw) graphObs.observe(gw);
 
-  const graphContainer = document.getElementById('graph-container');
-  if (graphContainer) graphObserver.observe(graphContainer);
-
-  /* ── Active nav link highlight ── */
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks  = document.querySelectorAll('nav a[href^="#"]');
+  /* ── Active nav link ── */
+  const sects = document.querySelectorAll('section[id]');
+  const navAs = document.querySelectorAll('nav a[href^="#"]');
   window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 140) current = s.id;
+    let cur = '';
+    sects.forEach(s => { if (window.scrollY >= s.offsetTop - 130) cur = s.id; });
+    navAs.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + cur ? '#A95B95' : '';
     });
-    navLinks.forEach(a => {
-      const active = a.getAttribute('href') === '#' + current;
-      a.style.color = active ? '#c084fc' : '';
+  }, { passive: true });
+
+  /* ── Subtle parallax on hero orbs ── */
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    document.querySelectorAll('#hero .orb').forEach((o, i) => {
+      o.style.transform = `translateY(${y * (i % 2 === 0 ? .07 : -.05)}px)`;
     });
   }, { passive: true });
 
   /* ── Form submit ── */
   function handleSubmit(e) {
     e.preventDefault();
-    const btn     = document.getElementById('submit-btn');
-    const btnText = document.getElementById('btn-text');
-    const btnIcon = document.getElementById('btn-icon');
-    const success = document.getElementById('form-success');
-    btn.disabled  = true;
-    btnText.textContent = 'Envoi en cours…';
-    btnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>';
+    const btn  = document.getElementById('submit-btn');
+    const txt  = document.getElementById('btn-text');
+    const ico  = document.getElementById('btn-icon');
+    const suc  = document.getElementById('form-success');
+    btn.disabled = true;
+    txt.textContent = 'Envoi en cours…';
+    ico.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>';
     setTimeout(() => {
       btn.style.display = 'none';
-      success.classList.remove('hidden');
+      suc.classList.remove('hidden');
       e.target.reset();
-    }, 1400);
+    }, 1300);
   }
-
-  /* ── Subtle parallax on hero orbs ── */
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    document.querySelectorAll('.hero-bg .orb').forEach((orb, i) => {
-      orb.style.transform = `translateY(${y * (i % 2 === 0 ? 0.08 : -0.06)}px)`;
-    });
-  }, { passive: true });
 </script>
 
 </body>
