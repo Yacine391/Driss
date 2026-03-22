@@ -5,15 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI TechLabs — Agents IA & Systèmes Digitaux</title>
 
-  <!-- Tailwind CDN -->
+  <!-- ① Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts : Prompt (titres) + Mukta (corps) -->
+  <!-- ② Google Fonts : Prompt (titres) + Mukta (corps) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600&family=Prompt:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
-  <!-- ── Design Tokens Gamma ── -->
+  <!-- ③ Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <!-- ④ Design Tokens Gamma — Tailwind config -->
   <script>
     tailwind.config = {
       theme: {
@@ -35,11 +38,11 @@
   </script>
 
   <style>
-    /* ── Reset & base ── */
+    /* ── Base ── */
     *, *::before, *::after { box-sizing: border-box; }
-    html   { background: #05050A; }
-    body   { font-family: 'Mukta', sans-serif; background: #05050A; color: #DAD8E9;
-             overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    html  { background: #05050A; scroll-behavior: smooth; }
+    body  { font-family: 'Mukta', sans-serif; background: #05050A; color: #DAD8E9;
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; }
     h1,h2,h3,h4 { font-family: 'Prompt', sans-serif; }
 
     /* ── Scrollbar ── */
@@ -47,7 +50,7 @@
     ::-webkit-scrollbar-track  { background: #05050A; }
     ::-webkit-scrollbar-thumb  { background: #A95B95; border-radius: 4px; }
 
-    /* ── Grid background pattern ── */
+    /* ── Grid pattern ── */
     .grid-bg {
       background-image:
         linear-gradient(rgba(169,91,149,.05) 1px, transparent 1px),
@@ -56,131 +59,166 @@
     }
 
     /* ── Glow orb ── */
-    .orb {
-      position: absolute; border-radius: 50%; pointer-events: none;
-      filter: blur(90px); will-change: transform;
-    }
+    .orb { position:absolute; border-radius:50%; pointer-events:none;
+           filter:blur(90px); will-change:transform; }
 
-    /* ── Navbar glass ── */
+    /* ── Navbar ── */
     .nav-glass {
-      background: rgba(5,5,10,.85);
-      backdrop-filter: blur(18px);
+      background: rgba(5,5,10,.88);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(169,91,149,.1);
     }
 
-    /* ── Separator ── */
-    .sep { border-color: rgba(169,91,149,.12); }
-
-    /* ── Tag / badge ── */
+    /* ── Tags / badges ── */
     .tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-family: 'Mukta', sans-serif;
-      font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-      color: #A95B95;
-      background: rgba(169,91,149,.09);
-      border: 1px solid rgba(169,91,149,.22);
-      padding: 3px 10px 3px 8px; border-radius: 100px;
+      display:inline-flex; align-items:center; gap:6px;
+      font-family:'Mukta',sans-serif; font-size:.68rem; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase;
+      color:#A95B95; background:rgba(169,91,149,.09);
+      border:1px solid rgba(169,91,149,.22); padding:3px 10px 3px 8px; border-radius:100px;
     }
-    .tag-dot {
-      width: 5px; height: 5px; border-radius: 50%; background: #A95B95;
-      flex-shrink: 0;
-      animation: pulseDot 2.2s ease-in-out infinite;
-    }
+    .tag-dot { width:5px; height:5px; border-radius:50%; background:#A95B95;
+               flex-shrink:0; animation:pulseDot 2.2s ease-in-out infinite; }
     @keyframes pulseDot { 0%,100%{opacity:.35} 50%{opacity:1} }
 
     /* ── Gradient text ── */
     .g-text {
-      background: linear-gradient(120deg, #fff 0%, #DAD8E9 45%, #A95B95 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      background: linear-gradient(120deg,#fff 0%,#DAD8E9 45%,#A95B95 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
     .g-text-pink {
-      background: linear-gradient(90deg, #C87AB4, #A95B95);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      background: linear-gradient(90deg,#C87AB4,#A95B95);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
 
-    /* ── Outline button ── */
-    .btn-outline {
-      border: 1px solid rgba(169,91,149,.38);
-      color: #C6BFEE; background: rgba(169,91,149,.06);
-      font-family: 'Prompt', sans-serif; font-weight: 500;
-      transition: all .3s ease;
+    /* ── Buttons ── */
+    /* Primary (exact Gamma spec) */
+    .btn-primary {
+      background: #A95B95; color: #fff; border-radius: .5rem;
+      padding: .75rem 1.5rem; font-family:'Prompt',sans-serif; font-weight:500;
+      transition: all .3s ease; display:inline-flex; align-items:center; gap:.5rem;
     }
-    .btn-outline:hover {
-      border-color: #A95B95;
-      background: rgba(169,91,149,.14);
-      box-shadow: 0 0 16px rgba(169,91,149,.28);
-      color: #fff;
+    .btn-primary:hover { opacity: .8; }
+
+    /* Outline */
+    .btn-outline {
+      border:1px solid rgba(169,91,149,.38); color:#C6BFEE;
+      background:rgba(169,91,149,.06); border-radius:.5rem;
+      padding:.75rem 1.5rem; font-family:'Prompt',sans-serif; font-weight:500;
+      transition:all .3s ease; display:inline-flex; align-items:center; gap:.5rem;
+    }
+    .btn-outline:hover { border-color:#A95B95; background:rgba(169,91,149,.14);
+                         box-shadow:0 0 16px rgba(169,91,149,.28); color:#fff; }
+
+    /* ── Cards ── */
+    /* Exact Gamma spec from ÉTAPE 2 */
+    .g-card {
+      background: #0B0C23;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,.4), 0 4px 6px -4px rgba(0,0,0,.3);
+      backdrop-filter: blur(4px);
+      background-opacity: .9;
+      padding: 1.5rem;
+      border: 1px solid rgba(55,65,81,1); /* border-gray-800 */
+      transition: border-color .3s, box-shadow .3s, transform .3s;
+    }
+    .g-card:hover {
+      border-color: rgba(169,91,149,.45);
+      box-shadow: 0 0 28px rgba(169,91,149,.15), 0 4px 24px rgba(0,0,0,.35);
+      transform: translateY(-2px);
     }
 
     /* ── Number circle ── */
     .num-circle {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 2rem; height: 2rem; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg,#7B3D6B,#A95B95);
-      font-family: 'Prompt', sans-serif; font-weight: 700; font-size: .7rem; color: #fff;
-      box-shadow: 0 0 10px rgba(169,91,149,.4);
+      display:inline-flex; align-items:center; justify-content:center;
+      width:2rem; height:2rem; border-radius:50%; flex-shrink:0;
+      background:linear-gradient(135deg,#7B3D6B,#A95B95);
+      font-family:'Prompt',sans-serif; font-weight:700; font-size:.7rem; color:#fff;
+      box-shadow:0 0 10px rgba(169,91,149,.4);
     }
 
-    /* ── Pill tag ── */
+    /* ── Pills ── */
     .pill {
-      font-size: .66rem; font-weight: 600; color: #C6BFEE;
-      background: rgba(198,191,238,.07);
-      border: 1px solid rgba(198,191,238,.16);
-      padding: 2px 8px; border-radius: 4px;
+      font-size:.66rem; font-weight:600; color:#C6BFEE;
+      background:rgba(198,191,238,.07); border:1px solid rgba(198,191,238,.16);
+      padding:2px 8px; border-radius:4px;
     }
 
-    /* ── Dot list item ── */
-    .dot-li { display: flex; align-items: flex-start; gap: 8px; color: #DAD8E9; }
-    .dot-li::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: #A95B95; flex-shrink: 0; margin-top: 7px;
-    }
+    /* ── Dot list ── */
+    .dot-li { display:flex; align-items:flex-start; gap:8px; color:#DAD8E9; }
+    .dot-li::before { content:''; width:5px; height:5px; border-radius:50%;
+                      background:#A95B95; flex-shrink:0; margin-top:7px; }
 
-    /* ── Card hover ── */
-    .card-hover {
-      transition: border-color .3s, box-shadow .3s, transform .3s;
-    }
-    .card-hover:hover {
-      border-color: rgba(169,91,149,.45) !important;
-      box-shadow: 0 0 30px rgba(169,91,149,.15), 0 4px 24px rgba(0,0,0,.3);
-      transform: translateY(-2px);
-    }
-
-    /* ── Hero justice-scale overlay ── */
-    .hero-scale-overlay {
-      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-      width: min(52%, 640px); opacity: .07; pointer-events: none;
-    }
-
-    /* ── Tech floating labels ── */
-    .tech-lbl {
-      position: absolute; pointer-events: none; user-select: none;
-      font-family: 'Prompt', sans-serif; font-weight: 700;
-      color: rgba(169,91,149,.15); letter-spacing: .14em;
-    }
+    /* ── Mobile menu ── */
+    #mobile-menu { display:none; }
+    #mobile-menu.open { display:flex; }
 
     /* ── Section top line ── */
     .section-line::before {
-      content: ''; display: block; height: 1px; width: 55%; margin: 0 auto 0;
-      background: linear-gradient(90deg, transparent, rgba(169,91,149,.3), transparent);
+      content:''; display:block; height:1px; width:55%; margin:0 auto;
+      background:linear-gradient(90deg,transparent,rgba(169,91,149,.3),transparent);
     }
 
-    /* ── Mobile menu ── */
-    #mobile-menu { display: none; }
-    #mobile-menu.open { display: flex; }
+    /* ── Hero ── */
+    .hero-bg {
+      background-image: url('images/balance-fond.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .hero-overlay {
+      background: linear-gradient(
+        135deg,
+        rgba(5,5,10,.92) 0%,
+        rgba(5,5,10,.82) 40%,
+        rgba(11,12,35,.70) 70%,
+        rgba(169,91,149,.08) 100%
+      );
+    }
 
-    /* ── Graph SVG animation ── */
-    .svg-path { stroke-dasharray: 500; stroke-dashoffset: 500; }
-    .svg-path.drawn { animation: drawPath 1.8s ease forwards; }
-    @keyframes drawPath { to { stroke-dashoffset: 0; } }
+    /* ── Scroll reveal ── */
+    /* Elements start with Tailwind classes opacity-0 + translate-y-10 (applied in HTML)
+       JS IntersectionObserver removes them and adds opacity-100 + translate-y-0 */
+
+    /* ── SVG Pyramid ── */
+    .pyramid-wrap {
+      position:relative;
+      filter: drop-shadow(0 0 28px rgba(169,91,149,.35));
+    }
+    .pyr-seg { transition: filter .25s, opacity .25s; cursor:pointer; }
+    .pyr-seg:hover { filter: brightness(1.35) drop-shadow(0 0 8px rgba(169,91,149,.7)); }
+    .pyr-seg-label {
+      font-family:'Prompt',sans-serif; font-weight:600; font-size:11px;
+      fill:#DAD8E9; pointer-events:none; user-select:none;
+    }
+    .pyr-seg-sub {
+      font-family:'Mukta',sans-serif; font-weight:400; font-size:9px;
+      fill:rgba(218,216,233,.55); pointer-events:none; user-select:none;
+    }
+    .pyr-glow {
+      position:absolute; inset:0; border-radius:50%;
+      background:radial-gradient(ellipse at center,rgba(169,91,149,.18) 0%,transparent 70%);
+      pointer-events:none;
+    }
+
+    /* ── Chart container ── */
+    .chart-container { position:relative; }
+
+    /* ── Schema image ── */
+    .schema-img {
+      width:100%; height:auto; border-radius:.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,.7);
+      border:1px solid rgba(169,91,149,.18);
+    }
   </style>
 </head>
 
 <body class="bg-gammaBg text-gammaBodyText">
 
-<!-- ══════════════════════════════════════════════
+
+<!-- ══════════════════════════════════════════════════
      NAVBAR
-══════════════════════════════════════════════ -->
+══════════════════════════════════════════════════ -->
 <nav id="site-nav" class="nav-glass fixed top-0 inset-x-0 z-50">
   <div class="max-w-7xl mx-auto px-5 h-[62px] flex items-center justify-between">
 
@@ -188,28 +226,27 @@
     <a href="#hero" class="flex items-center gap-2.5 flex-shrink-0">
       <div class="w-[34px] h-[34px] rounded-xl flex items-center justify-center relative"
            style="background:linear-gradient(135deg,#7B3D6B,#A95B95);box-shadow:0 0 14px rgba(169,91,149,.5);">
-        <span class="font-heading font-bold text-[11px] text-white relative z-10">AI</span>
+        <span class="font-heading font-bold text-[11px] text-white z-10">AI</span>
       </div>
       <span class="font-heading font-bold text-[1.05rem] text-white leading-none">
         AI<span class="text-gammaPrimary">Tech</span>Labs
       </span>
     </a>
 
-    <!-- Desktop links -->
+    <!-- Desktop nav links -->
     <div class="hidden md:flex items-center gap-7">
-      <a href="#contexte"     class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors duration-200">Contexte</a>
-      <a href="#services"     class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors duration-200">Services</a>
-      <a href="#architecture" class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors duration-200">Architecture</a>
-      <a href="#tarifs"       class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors duration-200">Tarifs</a>
-      <a href="#processus"    class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors duration-200">Processus</a>
-      <a href="#contact"      class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors duration-200">Contact</a>
+      <a href="#contexte"     class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Contexte</a>
+      <a href="#services"     class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Services</a>
+      <a href="#architecture" class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Architecture</a>
+      <a href="#demos"        class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Démos</a>
+      <a href="#tarifs"       class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Tarifs</a>
+      <a href="#contact"      class="text-[.82rem] font-body font-semibold text-gammaSubText hover:text-white transition-colors">Contact</a>
       <a href="https://aitechlabs.com" target="_blank" rel="noopener"
-         class="text-[.82rem] font-body font-semibold text-gammaPrimary hover:text-white transition-colors duration-200">Cliquez ici ↗</a>
+         class="text-[.82rem] font-body font-semibold text-gammaPrimary hover:text-white transition-colors">Cliquez ici ↗</a>
     </div>
 
     <!-- Desktop CTA -->
-    <a href="#contact"
-       class="hidden md:inline-flex items-center gap-2 bg-gammaPrimary text-white rounded-lg px-6 py-3 hover:opacity-80 transition-all duration-300 font-heading font-medium text-sm">
+    <a href="#contact" class="hidden md:inline-flex btn-primary text-sm">
       Découvrir nos Agents IA
       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -225,132 +262,107 @@
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="flex-col gap-0.5 px-5 pb-5 border-t sep">
+  <div id="mobile-menu" class="flex-col gap-0.5 px-5 pb-5 border-t border-gammaPrimary/10">
     <a href="#contexte"     onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Contexte</a>
     <a href="#services"     onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Services</a>
     <a href="#architecture" onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Architecture</a>
+    <a href="#demos"        onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Démos</a>
     <a href="#tarifs"       onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Tarifs</a>
-    <a href="#processus"    onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Processus</a>
     <a href="#contact"      onclick="closeMobileMenu()" class="block py-3 text-sm font-body font-semibold text-gammaSubText hover:text-white transition-colors">Contact</a>
     <div class="pt-3">
-      <a href="#contact"
-         class="block text-center bg-gammaPrimary text-white rounded-lg px-6 py-3 hover:opacity-80 transition-all duration-300 font-heading font-medium text-sm">
-        Découvrir nos Agents IA
-      </a>
+      <a href="#contact" class="btn-primary block text-center text-sm">Découvrir nos Agents IA</a>
     </div>
   </div>
 </nav>
 
 
-<!-- ══════════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════ -->
-<section id="hero" class="relative min-h-screen flex items-center pt-[62px] pb-20 overflow-hidden grid-bg bg-gammaBg">
+<!-- ══════════════════════════════════════════════════
+     HERO  — balance de la justice en fond
+══════════════════════════════════════════════════ -->
+<section id="hero" class="hero-bg relative min-h-screen flex items-center pt-[62px] pb-20 overflow-hidden">
 
-  <!-- Background orbs -->
-  <div class="orb w-[600px] h-[600px] -top-32 -left-32"
-       style="background:radial-gradient(circle,rgba(169,91,149,.2) 0%,transparent 70%)"></div>
-  <div class="orb w-[420px] h-[420px] bottom-10 right-10"
+  <!-- Dark overlay for readability -->
+  <div class="hero-overlay absolute inset-0 z-0"></div>
+
+  <!-- Grid pattern on top of overlay -->
+  <div class="absolute inset-0 z-[1] grid-bg opacity-40"></div>
+
+  <!-- Floating orbs -->
+  <div class="orb w-[550px] h-[550px] -top-28 -left-28 z-[1]"
+       style="background:radial-gradient(circle,rgba(169,91,149,.22) 0%,transparent 70%)"></div>
+  <div class="orb w-[350px] h-[350px] bottom-10 right-10 z-[1]"
        style="background:radial-gradient(circle,rgba(169,91,149,.15) 0%,transparent 70%)"></div>
-
-  <!-- Justice scale SVG (ghost overlay) -->
-  <div class="hero-scale-overlay" aria-hidden="true">
-    <svg viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="297" y="190" width="6" height="320" fill="rgba(169,91,149,1)" rx="3"/>
-      <circle cx="300" cy="184" r="12" fill="rgba(169,91,149,.7)" stroke="rgba(169,91,149,1)" stroke-width="2"/>
-      <rect x="90" y="180" width="420" height="5" fill="rgba(169,91,149,.8)" rx="2.5"/>
-      <rect x="248" y="506" width="104" height="10" fill="rgba(169,91,149,.6)" rx="5"/>
-      <path d="M112 185 L112 290" stroke="rgba(169,91,149,.6)" stroke-width="2" stroke-dasharray="6 4"/>
-      <ellipse cx="112" cy="298" rx="62" ry="14" fill="rgba(169,91,149,.18)" stroke="rgba(169,91,149,.7)" stroke-width="2"/>
-      <path d="M50 298 Q112 320 174 298" fill="rgba(169,91,149,.1)" stroke="rgba(169,91,149,.5)" stroke-width="1.5"/>
-      <path d="M488 185 L488 285" stroke="rgba(169,91,149,.6)" stroke-width="2" stroke-dasharray="6 4"/>
-      <ellipse cx="488" cy="293" rx="62" ry="14" fill="rgba(169,91,149,.18)" stroke="rgba(169,91,149,.7)" stroke-width="2"/>
-      <path d="M426 293 Q488 315 550 293" fill="rgba(169,91,149,.1)" stroke="rgba(169,91,149,.5)" stroke-width="1.5"/>
-      <text x="90"  y="304" text-anchor="middle" fill="rgba(169,91,149,1)" font-size="10" font-weight="700" font-family="Prompt,sans-serif">IA</text>
-      <text x="466" y="299" text-anchor="middle" fill="rgba(169,91,149,1)" font-size="9"  font-weight="700" font-family="Prompt,sans-serif">TECH</text>
-      <polygon points="300,62 318,72 318,94 300,104 282,94 282,72" fill="none" stroke="rgba(169,91,149,.5)" stroke-width="2"/>
-    </svg>
-  </div>
-
-  <!-- Floating tech labels -->
-  <span class="tech-lbl text-[2.5rem]"  style="top:16%;left:5%">⬡</span>
-  <span class="tech-lbl text-sm"        style="top:27%;left:14%">IA</span>
-  <span class="tech-lbl text-[.6rem]"   style="top:66%;left:3%">AUTOMATISATION</span>
-  <span class="tech-lbl text-[.6rem]"   style="top:40%;right:2%">TECHNOLOGIE</span>
-  <span class="tech-lbl text-2xl"       style="top:70%;right:5%">◈</span>
 
   <!-- Content -->
   <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
-    <div class="max-w-[660px]">
+    <div class="max-w-[680px]">
 
       <div class="tag mb-8 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
         <span class="tag-dot"></span>Solution IA Premium
       </div>
 
-      <h1 class="font-heading font-extrabold leading-[.92] tracking-tight mb-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      <h1 class="font-heading font-extrabold leading-[.92] tracking-tight mb-6
+                 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
           style="font-size:clamp(3.8rem,9vw,7rem);">
         <span class="g-text">AI TechLabs</span>
       </h1>
 
-      <p class="font-body text-gammaSubText text-xl md:text-2xl leading-relaxed mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      <p class="font-body text-gammaSubText text-xl md:text-2xl leading-relaxed mb-4
+                scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
         Agents IA et systèmes digitaux pensés pour l'exécution réelle.
       </p>
 
-      <p class="font-body text-gammaBodyText/75 text-[.96rem] leading-relaxed mb-4 max-w-[34rem] scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      <p class="font-body text-gammaBodyText/75 text-[.96rem] leading-relaxed mb-4 max-w-[34rem]
+                scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
         Nous entrons dans une période de transformation profonde. Les entreprises qui s'adaptent gagnent en stabilité, en productivité et en maîtrise. Celles qui restent dépendantes de processus humains lourds deviennent fragiles.
       </p>
 
-      <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed mb-8 max-w-[34rem] scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-        AI TechLabs conçoit des agents IA, des applications web et mobile no-code, des sites professionnels et des systèmes automatisés conçus pour fonctionner dans le monde réel. <strong class="text-white">Une technologie qui s'achète une fois. Un avantage qui dure dans le temps.</strong>
+      <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed mb-8 max-w-[34rem]
+                scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+        AI TechLabs conçoit des agents IA, des applications web et mobile no-code, des sites professionnels et des systèmes automatisés conçus pour fonctionner dans le monde réel.
+        <strong class="text-white">Une technologie qui s'achète une fois. Un avantage qui dure dans le temps.</strong>
       </p>
 
       <!-- CTAs -->
-      <div class="flex flex-col sm:flex-row gap-4 mb-10 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-        <a href="#contact"
-           class="bg-gammaPrimary text-white rounded-lg px-6 py-3 hover:opacity-80 transition-all duration-300 font-heading font-medium inline-flex items-center justify-center gap-2">
+      <div class="flex flex-col sm:flex-row gap-4 mb-10
+                  scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+        <a href="#contact" class="btn-primary text-base justify-center">
           Demander une étude
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
           </svg>
         </a>
-        <a href="#contact"
-           class="btn-outline rounded-lg px-6 py-3 inline-flex items-center justify-center">
-          Échanger sur un projet
-        </a>
+        <a href="#contact" class="btn-outline text-base justify-center">Échanger sur un projet</a>
       </div>
 
       <!-- Hero descriptive box -->
-      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out
-                  bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800
-                  max-w-[600px]"
-           style="border-color:rgba(169,91,149,.2);">
+      <div class="g-card max-w-[600px]
+                  scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+           style="border-color:rgba(169,91,149,.22);">
         <p class="font-body text-gammaBodyText text-[.9rem] leading-relaxed mb-4">
-          Dans un monde incertain, la stabilité devient un luxe stratégique. <span class="text-gammaPrimary font-semibold">Moins de dépendance humaine. Plus de maîtrise.</span>
+          Dans un monde incertain, la stabilité devient un luxe stratégique.
+          <span class="text-gammaPrimary font-semibold">Moins de dépendance humaine. Plus de maîtrise.</span>
         </p>
-        <p class="font-body text-gammaBodyText/60 text-xs leading-relaxed">
-          AI TechLabs accompagne des entreprises de toutes tailles, des entrepreneurs aux organisations structurées, y compris dans des environnements à forte exigence et à positionnement premium.
-        </p>
-        <div class="mt-4 flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2">
           <span class="pill">16 Agents propriétaires</span>
           <span class="pill">5 Axes stratégiques</span>
           <span class="pill">Disponible 24/7</span>
           <span class="pill">Livraison 5–7 jours</span>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Bottom gradient fade -->
-  <div class="absolute bottom-0 inset-x-0 h-24 pointer-events-none"
+  <!-- Bottom gradient -->
+  <div class="absolute bottom-0 inset-x-0 h-32 pointer-events-none z-[2]"
        style="background:linear-gradient(transparent,#05050A)"></div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      CONTEXTE — Pourquoi maintenant
-══════════════════════════════════════════════ -->
-<section id="contexte" class="py-24 bg-gammaBg grid-bg section-line relative overflow-hidden">
+══════════════════════════════════════════════════ -->
+<section id="contexte" class="py-24 bg-gammaBg section-line grid-bg relative overflow-hidden">
   <div class="orb w-80 h-80 -top-20 right-10 opacity-30"
        style="background:radial-gradient(circle,rgba(169,91,149,.2) 0%,transparent 70%)"></div>
 
@@ -359,7 +371,8 @@
     <div class="tag mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Contexte
     </div>
-    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-6
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Pourquoi maintenant
     </h2>
 
@@ -369,139 +382,45 @@
           Nous vivons l'une des plus grandes transitions économiques et technologiques du siècle. Depuis 2022, on observe un ralentissement marqué de la création de nouveaux postes, avec une dynamique plus fragile et plus inégale entre 2023 et 2025 selon les secteurs.
         </p>
         <p class="font-body text-gammaBodyText/70 leading-relaxed mb-4">
-          En parallèle, les investissements en digitalisation, en automatisation et en agents logiciels ont connu une croissance continue et accélérée. <strong class="text-white">Ce changement n'est pas une crise. C'est une mutation.</strong>
+          En parallèle, les investissements en digitalisation, en automatisation et en agents logiciels ont connu une croissance continue et accélérée.
+          <strong class="text-white">Ce changement n'est pas une crise. C'est une mutation.</strong>
         </p>
         <p class="font-body text-gammaBodyText/70 leading-relaxed">
           Les organisations qui intègrent des systèmes fiables gagnent en agilité, en rentabilité et en sécurité opérationnelle. C'est précisément dans cette transition que s'inscrit AI TechLabs.
         </p>
       </div>
-      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-        <p class="font-body text-gammaBodyText/70 leading-relaxed mb-4">
-          Nous concevons les outils que les entreprises mettent en place quand elles n'embauchent plus, mais qu'elles doivent continuer à performer.
-        </p>
 
-        <!-- Ascending graph -->
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800"
-             style="border-color:rgba(169,91,149,.18);">
-          <div class="flex justify-between items-center mb-3">
-            <span class="font-body font-semibold text-xs uppercase tracking-widest text-gammaSubText/50">Performance dans le temps</span>
+      <!-- ═══ Chart.js — Graphe interactif ═══ -->
+      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" id="chart-section">
+        <div class="g-card" style="border-color:rgba(169,91,149,.18); padding:1.5rem;">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-body font-semibold text-xs uppercase tracking-widest text-gammaSubText/60">
+              Investissements IA & Automatisation (indices)
+            </span>
             <span class="font-body font-bold text-xs text-gammaPrimary">↑ +340%</span>
           </div>
-          <div class="relative h-[72px] w-full overflow-hidden" id="graph-wrap">
-            <svg class="w-full h-full" viewBox="0 0 580 72" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="gLg1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"   stop-color="rgba(169,91,149,.2)"/>
-                  <stop offset="100%" stop-color="rgba(169,91,149,.95)"/>
-                </linearGradient>
-                <linearGradient id="gLg2" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%"   stop-color="rgba(169,91,149,.18)"/>
-                  <stop offset="100%" stop-color="rgba(169,91,149,0)"/>
-                </linearGradient>
-              </defs>
-              <path d="M0 68 C70 65 140 58 220 48 S360 26 430 15 S530 3 580 2 L580 72 L0 72Z" fill="url(#gLg2)"/>
-              <path id="graph-path" class="svg-path"
-                    d="M0 68 C70 65 140 58 220 48 S360 26 430 15 S530 3 580 2"
-                    stroke="url(#gLg1)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-              <circle cx="220" cy="48" r="3" fill="#A95B95"/>
-              <circle cx="430" cy="15" r="3" fill="#A95B95"/>
-              <circle cx="580" cy="2"  r="5" fill="#A95B95" style="filter:drop-shadow(0 0 5px rgba(169,91,149,.9))"/>
-            </svg>
+          <div class="chart-container" style="height:200px; position:relative;">
+            <canvas id="automatisationChart"></canvas>
           </div>
-          <div class="flex justify-between font-body text-[11px] text-gammaSubText/30 mt-1">
-            <span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026 →</span>
+          <div class="flex justify-between font-body text-[11px] text-gammaSubText/35 mt-2">
+            <span>2020</span><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025 →</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Image placeholder — schéma automatisation -->
+    <!-- Schéma d'automatisation — image réelle -->
     <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out mb-14">
       <div class="tag mb-4"><span class="tag-dot"></span>Automatisation des flux numériques</div>
-      <img src=""
-           alt="Schéma d'automatisation des flux numériques — AI TechLabs"
-           class="w-full h-auto rounded-xl shadow-2xl hidden"
-           id="schema-img"
-           style="border:1px solid rgba(169,91,149,.2);" />
-      <!-- Fallback flow diagram (affiché si l'image n'est pas fournie) -->
-      <div id="schema-fallback" class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-8 border border-gray-800"
-           style="border-color:rgba(169,91,149,.18);">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-          <!-- Node 1 -->
-          <div class="flex flex-col items-center gap-2">
-            <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
-                 style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.28);">
-              <svg class="w-7 h-7 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
-              </svg>
-            </div>
-            <span class="font-body text-gammaBodyText text-xs font-semibold text-center leading-snug">Processus<br/>humain</span>
-          </div>
-          <!-- Arrow -->
-          <div class="hidden md:flex items-center gap-1 text-gammaPrimary/40">
-            <div class="w-12 h-px bg-gammaPrimary/30"></div>
-            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <div class="md:hidden flex flex-col items-center gap-1 text-gammaPrimary/40">
-            <div class="h-6 w-px bg-gammaPrimary/30"></div>
-            <svg class="w-3 h-3 fill-current rotate-90" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <!-- Node 2 -->
-          <div class="flex flex-col items-center gap-2">
-            <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
-                 style="background:rgba(169,91,149,.18);border:1px solid rgba(169,91,149,.4);">
-              <svg class="w-7 h-7 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
-              </svg>
-            </div>
-            <span class="font-body text-gammaBodyText text-xs font-semibold text-center leading-snug">Agent IA<br/>intégré</span>
-          </div>
-          <!-- Arrow -->
-          <div class="hidden md:flex items-center gap-1 text-gammaPrimary/40">
-            <div class="w-12 h-px bg-gammaPrimary/30"></div>
-            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <div class="md:hidden flex flex-col items-center gap-1 text-gammaPrimary/40">
-            <div class="h-6 w-px bg-gammaPrimary/30"></div>
-            <svg class="w-3 h-3 fill-current rotate-90" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <!-- Node 3 -->
-          <div class="flex flex-col items-center gap-2">
-            <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
-                 style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.28);">
-              <svg class="w-7 h-7 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
-              </svg>
-            </div>
-            <span class="font-body text-gammaBodyText text-xs font-semibold text-center leading-snug">Exécution<br/>automatisée</span>
-          </div>
-          <!-- Arrow -->
-          <div class="hidden md:flex items-center gap-1 text-gammaPrimary/40">
-            <div class="w-12 h-px bg-gammaPrimary/30"></div>
-            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <div class="md:hidden flex flex-col items-center gap-1 text-gammaPrimary/40">
-            <div class="h-6 w-px bg-gammaPrimary/30"></div>
-            <svg class="w-3 h-3 fill-current rotate-90" viewBox="0 0 24 24"><path d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-          </div>
-          <!-- Node 4 (highlight) -->
-          <div class="flex flex-col items-center gap-2">
-            <div class="w-16 h-16 rounded-2xl flex items-center justify-center"
-                 style="background:rgba(169,91,149,.25);border:1px solid rgba(169,91,149,.6);box-shadow:0 0 18px rgba(169,91,149,.2);">
-              <svg class="w-7 h-7 text-gammaBodyText" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/>
-              </svg>
-            </div>
-            <span class="font-body font-bold text-xs text-center leading-snug text-gammaPrimary">Stabilité<br/>opérationnelle</span>
-          </div>
-        </div>
-      </div>
+      <img src="images/schema-automatisation.jpg"
+           alt="Schéma d'automatisation des flux de travail numériques — AI TechLabs"
+           class="schema-img" />
     </div>
 
     <!-- 4 cards grid -->
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
            style="border-color:rgba(169,91,149,.14);">
         <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center"
              style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.22);">
@@ -514,7 +433,7 @@
         <p class="font-body text-gammaBodyText/60 text-xs leading-relaxed">Les processus automatisés garantissent une exécution constante, sans erreur humaine.</p>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
            style="border-color:rgba(169,91,149,.14); transition-delay:.08s">
         <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center"
              style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.22);">
@@ -527,7 +446,7 @@
         <p class="font-body text-gammaBodyText/60 text-xs leading-relaxed">La stabilité opérationnelle est un avantage concurrentiel durable.</p>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
            style="border-color:rgba(169,91,149,.14); transition-delay:.16s">
         <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center"
              style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.22);">
@@ -540,7 +459,7 @@
         <p class="font-body text-gammaBodyText/60 text-xs leading-relaxed">Un agent IA équivaut en coût global à quelques mois de salaire d'un poste équivalent.</p>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
            style="border-color:rgba(169,91,149,.14); transition-delay:.24s">
         <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center"
              style="background:rgba(169,91,149,.1);border:1px solid rgba(169,91,149,.22);">
@@ -555,13 +474,8 @@
 
     </div>
 
-    <!-- Sources -->
-    <p class="font-body text-gammaBodyText/25 text-xs leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      Lecture de tendances, sources publiques — OCDE – Employment Outlook | Eurostat – Labour Market Statistics | WEF – Future of Jobs Report 2023/2024 | McKinsey Global Institute – Automation and AI investment trends | Gartner – AI and automation spending trends
-    </p>
-
     <!-- Approach block -->
-    <div class="mt-16 bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-8 md:p-12 border border-gray-800 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+    <div class="g-card md:p-12 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
          style="border-color:rgba(169,91,149,.2);">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
@@ -570,22 +484,14 @@
             Nous ne vendons pas des outils.<br/>
             <span class="g-text-pink">Nous concevons de la stabilité opérationnelle.</span>
           </h3>
-          <p class="font-body text-gammaBodyText/70 leading-relaxed text-sm mb-3">
-            Toutes les grandes ruptures technologiques suivent le même schéma. Certaines fonctions disparaissent, d'autres se transforment, et de nouveaux rôles émergent. Ce n'est pas la fin du travail. C'est la fin des tâches humaines à faible valeur, répétitives, instables ou critiques lorsqu'elles reposent sur une seule personne.
-          </p>
           <p class="font-body text-gammaBodyText/70 leading-relaxed text-sm">
-            Dans les années à venir, ne survivront durablement que les entreprises capables de sécuriser leurs opérations, de réduire leur dépendance humaine sur les fonctions clés et de garantir une exécution constante, prévisible et continue.
+            Des systèmes qui fonctionnent <strong class="text-white">24h/24, 7j/7</strong>, sans fatigue, sans absence, selon une logique stable, et qui s'améliorent dans le temps.
           </p>
         </div>
         <div class="rounded-2xl p-6" style="background:rgba(169,91,149,.06);border:1px solid rgba(169,91,149,.18);">
           <p class="font-heading font-bold text-white text-lg mb-1">Un agent IA s'achète une fois.</p>
           <p class="text-gammaPrimary font-heading font-semibold mb-4">Il fonctionne en continu.</p>
-          <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed mb-4">
-            Son coût global équivaut, dans la majorité des cas, à quelques mois de salaire d'un poste équivalent.
-          </p>
-          <p class="font-body text-gammaBodyText/55 text-sm leading-relaxed">
-            La seule récurrence restante est la maintenance, assurant la mise à jour, l'optimisation et la continuité du système.
-          </p>
+          <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed">Son coût global équivaut, dans la majorité des cas, à quelques mois de salaire d'un poste équivalent.</p>
           <div class="flex flex-wrap gap-2 mt-5">
             <span class="pill">5–7 jours de livraison</span>
             <span class="pill">Formation incluse</span>
@@ -599,30 +505,31 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      SERVICES
-══════════════════════════════════════════════ -->
+══════════════════════════════════════════════════ -->
 <section id="services" class="py-24 bg-gammaBg section-line relative overflow-hidden">
   <div class="orb w-96 h-96 -bottom-24 -left-24 opacity-25"
        style="background:radial-gradient(circle,rgba(169,91,149,.18) 0%,transparent 70%)"></div>
-
   <div class="max-w-7xl mx-auto px-6">
 
     <div class="tag mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Services
     </div>
-    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Ce que nous faisons
     </h2>
-    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-12 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      AI TechLabs propose une gamme complète de solutions digitales et d'intelligence artificielle appliquée, orientées vers l'exécution opérationnelle et la création de valeur mesurable. Notre expertise couvre l'ensemble du spectre digital, des agents IA aux applications métiers, en passant par les sites professionnels, les landing pages et les automatisations avancées.
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-12 leading-relaxed
+              scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      AI TechLabs propose une gamme complète de solutions digitales et d'intelligence artificielle appliquée, orientées vers l'exécution opérationnelle et la création de valeur mesurable.
     </p>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
            style="border-color:rgba(169,91,149,.14);">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform"
              style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.28);">
           <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
@@ -633,9 +540,9 @@
         <span class="text-xs font-heading font-semibold text-gammaPrimary group-hover:underline">Explorer →</span>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
-           style="border-color:rgba(169,91,149,.14); transition-delay:.08s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
+           style="border-color:rgba(169,91,149,.14); transition-delay:.07s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform"
              style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.28);">
           <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3m-3 3h3m-3 3h3"/>
@@ -646,9 +553,9 @@
         <span class="text-xs font-heading font-semibold text-gammaPrimary group-hover:underline">Explorer →</span>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
-           style="border-color:rgba(169,91,149,.14); transition-delay:.16s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
+           style="border-color:rgba(169,91,149,.14); transition-delay:.14s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform"
              style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.28);">
           <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/>
@@ -659,9 +566,9 @@
         <span class="text-xs font-heading font-semibold text-gammaPrimary group-hover:underline">Explorer →</span>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
-           style="border-color:rgba(169,91,149,.14); transition-delay:.08s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
+           style="border-color:rgba(169,91,149,.14); transition-delay:.07s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform"
              style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.28);">
           <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 18V8.25m-18 0V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v2.25m-18 0h18"/>
@@ -672,9 +579,9 @@
         <span class="text-xs font-heading font-semibold text-gammaPrimary group-hover:underline">Explorer →</span>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
-           style="border-color:rgba(169,91,149,.14); transition-delay:.16s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
+           style="border-color:rgba(169,91,149,.14); transition-delay:.14s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform"
              style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.28);">
           <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
@@ -685,9 +592,9 @@
         <span class="text-xs font-heading font-semibold text-gammaPrimary group-hover:underline">Explorer →</span>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
-           style="border-color:rgba(169,91,149,.14); transition-delay:.24s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out group"
+           style="border-color:rgba(169,91,149,.14); transition-delay:.21s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center group-hover:scale-110 transition-transform"
              style="background:rgba(169,91,149,.12);border:1px solid rgba(169,91,149,.28);">
           <svg class="w-6 h-6 text-gammaPrimary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
@@ -701,250 +608,301 @@
     </div>
 
     <!-- Transparence note -->
-    <div class="rounded-xl p-5 flex gap-3 items-start mb-12 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+    <div class="rounded-xl p-5 flex gap-3 items-start mb-10 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
          style="background:rgba(169,91,149,.04);border:1px solid rgba(169,91,149,.1);">
       <svg class="w-4 h-4 text-gammaPrimary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
       </svg>
       <div>
         <p class="font-heading font-semibold text-white text-xs mb-1">Transparence</p>
-        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed">Les agents IA sont des outils préprogrammés d'exécution et d'assistance automatisée. Ils ne sont pas des décideurs autonomes. Leur performance dépend de l'usage, de la stratégie et des décisions humaines. Il s'agit d'outils d'optimisation, non de solutions miracles.</p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed">Les agents IA sont des outils préprogrammés d'exécution et d'assistance automatisée. Ils ne sont pas des décideurs autonomes. Il s'agit d'outils d'optimisation, non de solutions miracles.</p>
       </div>
     </div>
 
     <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      <a href="#contact"
-         class="btn-outline rounded-lg px-6 py-3 inline-flex items-center gap-2">
-        Échanger sur un projet
-      </a>
+      <a href="#contact" class="btn-outline">Échanger sur un projet</a>
     </div>
 
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════
-     ARCHITECTURE IA
-══════════════════════════════════════════════ -->
-<section id="architecture" class="py-24 grid-bg section-line relative overflow-hidden">
-  <div class="orb w-[420px] h-[420px] top-20 -right-20 opacity-20"
-       style="background:radial-gradient(circle,rgba(169,91,149,.18) 0%,transparent 70%)"></div>
+<!-- ══════════════════════════════════════════════════
+     DEMOS — Pyramide SVG Interactive
+══════════════════════════════════════════════════ -->
+<section id="demos" class="py-24 section-line grid-bg relative overflow-hidden">
+  <div class="orb w-[500px] h-[500px] top-10 -right-20 opacity-20"
+       style="background:radial-gradient(circle,rgba(169,91,149,.2) 0%,transparent 70%)"></div>
 
   <div class="max-w-7xl mx-auto px-6">
 
     <div class="tag mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Architecture IA
     </div>
-    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      Hiérarchie des <span class="g-text-pink">16 agents IA</span>
+    </h2>
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed
+              scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      Notre architecture repose sur une hiérarchie modulaire de 5 axes stratégiques. Survolez chaque segment pour explorer les agents.
+    </p>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+      <!-- ═══ SVG Pyramid Interactive ═══ -->
+      <div class="pyramid-wrap scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+        <div class="pyr-glow"></div>
+        <svg viewBox="0 0 480 460" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-lg mx-auto" role="img" aria-label="Pyramide des 5 axes stratégiques AI TechLabs">
+          <defs>
+            <!-- Gradients for each tier -->
+            <linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#C87AB4"/><stop offset="100%" stop-color="#A95B95"/>
+            </linearGradient>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#A95B95"/><stop offset="100%" stop-color="#8A3E78"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8A3E78"/><stop offset="100%" stop-color="#6D2760"/>
+            </linearGradient>
+            <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6D2760"/><stop offset="100%" stop-color="#4F1A46"/>
+            </linearGradient>
+            <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4F1A46"/><stop offset="100%" stop-color="#300D2C"/>
+            </linearGradient>
+            <!-- Glow filter -->
+            <filter id="glow-filter" x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Tier 0 — AXE 5 Extensions (top/tip) -->
+          <g class="pyr-seg" data-tier="0"
+             data-title="AXE 5 — Extensions sur mesure"
+             data-agents="Jarvis Architect · Jarvis Custom">
+            <polygon points="240,30 174,120 306,120"
+                     fill="url(#g0)" opacity=".92"
+                     stroke="rgba(218,216,233,.15)" stroke-width="1"/>
+            <text x="240" y="82" text-anchor="middle" class="pyr-seg-label" style="font-size:10px;">AXE 5</text>
+            <text x="240" y="96" text-anchor="middle" class="pyr-seg-sub" style="font-size:8px;">Extensions</text>
+          </g>
+
+          <!-- Tier 1 — AXE 4 Pilotage -->
+          <g class="pyr-seg" data-tier="1"
+             data-title="AXE 4 — Pilotage & Supervision"
+             data-agents="Jarvis Insight · Jarvis Control">
+            <polygon points="174,126 306,126 336,186 144,186"
+                     fill="url(#g1)" opacity=".92"
+                     stroke="rgba(218,216,233,.12)" stroke-width="1"/>
+            <text x="240" y="153" text-anchor="middle" class="pyr-seg-label">AXE 4</text>
+            <text x="240" y="167" text-anchor="middle" class="pyr-seg-sub">Pilotage & Supervision</text>
+          </g>
+
+          <!-- Tier 2 — AXE 3 Sécurité -->
+          <g class="pyr-seg" data-tier="2"
+             data-title="AXE 3 — Sécurité, Conformité & Structuration"
+             data-agents="Jarvis Secure · Jarvis Legal · Jarvis Finance · Jarvis Data">
+            <polygon points="144,192 336,192 370,258 110,258"
+                     fill="url(#g2)" opacity=".92"
+                     stroke="rgba(218,216,233,.12)" stroke-width="1"/>
+            <text x="240" y="220" text-anchor="middle" class="pyr-seg-label">AXE 3</text>
+            <text x="240" y="234" text-anchor="middle" class="pyr-seg-sub">Sécurité, Conformité & Structuration</text>
+          </g>
+
+          <!-- Tier 3 — AXE 2 Exécution -->
+          <g class="pyr-seg" data-tier="3"
+             data-title="AXE 2 — Exécution & Organisation interne"
+             data-agents="Jarvis Flow · Jarvis Admin · Jarvis People · Jarvis Ops">
+            <polygon points="110,264 370,264 406,336 74,336"
+                     fill="url(#g3)" opacity=".92"
+                     stroke="rgba(218,216,233,.1)" stroke-width="1"/>
+            <text x="240" y="292" text-anchor="middle" class="pyr-seg-label">AXE 2</text>
+            <text x="240" y="308" text-anchor="middle" class="pyr-seg-sub">Exécution & Organisation interne</text>
+          </g>
+
+          <!-- Tier 4 — AXE 1 Croissance (base) -->
+          <g class="pyr-seg" data-tier="4"
+             data-title="AXE 1 — Croissance & Relation client"
+             data-agents="Jarvis Lead · Jarvis Voice · Jarvis Care · Jarvis Marketing">
+            <polygon points="74,342 406,342 450,430 30,430"
+                     fill="url(#g4)" opacity=".92"
+                     stroke="rgba(218,216,233,.1)" stroke-width="1"/>
+            <text x="240" y="378" text-anchor="middle" class="pyr-seg-label">AXE 1</text>
+            <text x="240" y="394" text-anchor="middle" class="pyr-seg-sub">Croissance & Relation client</text>
+            <text x="240" y="412" text-anchor="middle" class="pyr-seg-sub" style="font-size:8px;opacity:.55">Jarvis Lead · Voice · Care · Marketing</text>
+          </g>
+
+          <!-- Edge line glow overlay -->
+          <polygon points="240,30 450,430 30,430"
+                   fill="none"
+                   stroke="rgba(169,91,149,.3)" stroke-width="1.5"/>
+        </svg>
+      </div>
+
+      <!-- Pyramid legend / tooltip panel -->
+      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+        <!-- Tooltip dynamique -->
+        <div id="pyr-tooltip" class="g-card mb-6 transition-all duration-300"
+             style="border-color:rgba(169,91,149,.35); min-height:110px;">
+          <p class="font-body text-gammaBodyText/50 text-sm text-center py-4">
+            ← Survolez un segment de la pyramide pour explorer l'axe
+          </p>
+        </div>
+
+        <!-- Static legend -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#C87AB4"></div>
+            <span class="font-body text-gammaBodyText/70 text-sm"><strong class="text-white">AXE 5</strong> — Extensions métiers & agents sur mesure</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#A95B95"></div>
+            <span class="font-body text-gammaBodyText/70 text-sm"><strong class="text-white">AXE 4</strong> — Pilotage & supervision stratégique</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#8A3E78"></div>
+            <span class="font-body text-gammaBodyText/70 text-sm"><strong class="text-white">AXE 3</strong> — Sécurité, conformité & structuration</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#6D2760"></div>
+            <span class="font-body text-gammaBodyText/70 text-sm"><strong class="text-white">AXE 2</strong> — Exécution & organisation interne</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#4F1A46"></div>
+            <span class="font-body text-gammaBodyText/70 text-sm"><strong class="text-white">AXE 1</strong> — Croissance & relation client</span>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#architecture" class="btn-primary text-sm">Voir les 16 agents</a>
+          <a href="#contact"      class="btn-outline text-sm">Demander une étude</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════
+     ARCHITECTURE IA — 16 agents
+══════════════════════════════════════════════════ -->
+<section id="architecture" class="py-24 bg-gammaBg section-line relative overflow-hidden">
+  <div class="orb w-[420px] h-[420px] top-20 -right-20 opacity-18"
+       style="background:radial-gradient(circle,rgba(169,91,149,.18) 0%,transparent 70%)"></div>
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="tag mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      <span class="tag-dot"></span>Architecture IA — 5 axes
+    </div>
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Une architecture de <span class="g-text-pink">16 agents IA</span>
     </h2>
-    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-6 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      conçue pour structurer, automatiser et piloter une entreprise
-    </p>
-    <p class="font-body text-gammaBodyText/70 max-w-3xl mb-14 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed
+              scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       AI TechLabs ne vend pas des agents isolés. Nous concevons des systèmes d'agents IA spécialisés, interconnectés et déployables selon vos enjeux métiers.
     </p>
 
-    <!-- Philosophy -->
-    <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-8 border border-gray-800 mb-14 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-         style="border-color:rgba(169,91,149,.18);">
-      <div class="tag mb-4"><span class="tag-dot"></span>Philosophie</div>
-      <h3 class="font-heading font-bold text-white text-xl mb-4">Ce qu'est un agent IA chez AI TechLabs</h3>
-      <div class="grid lg:grid-cols-3 gap-6 font-body text-gammaBodyText/70 text-sm leading-relaxed">
-        <p>Un agent IA n'est pas un chatbot. C'est un système logiciel autonome, capable d'analyser, de décider et d'agir selon des règles métiers précises. Il exécute des tâches répétitives, traite de l'information, interagit avec d'autres systèmes et apprend de ses actions.</p>
-        <p>Chez AI TechLabs, chaque agent est conçu pour une fonction métier spécifique : prospection, support client, administration, conformité, pilotage financier. Mais leur véritable puissance réside dans leur capacité à travailler ensemble.</p>
-        <p>Un agent isolé apporte de l'efficacité. Un système d'agents orchestrés crée de la cohérence opérationnelle. C'est la différence entre automatiser une tâche et <strong class="text-white">structurer une organisation</strong>.</p>
-      </div>
-    </div>
-
-    <!-- 5 axes -->
-    <div class="tag mb-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      <span class="tag-dot"></span>5 axes stratégiques
-    </div>
-    <h3 class="font-heading font-bold text-white text-2xl mb-8 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      Notre architecture repose sur 5 piliers métiers interconnectés
-    </h3>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-14">
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12);">
-        <span class="text-xl">🚀</span><div class="pill inline-block my-2">AXE 1</div>
-        <p class="font-heading font-semibold text-white text-xs mt-1 mb-1.5">Croissance & relation client</p>
-        <p class="font-body text-gammaBodyText/45 text-xs leading-relaxed">Acquisition, prospection, support et fidélisation. Les agents qui génèrent et entretiennent votre pipeline commercial.</p>
-      </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.06s">
-        <span class="text-xl">⚙️</span><div class="pill inline-block my-2">AXE 2</div>
-        <p class="font-heading font-semibold text-white text-xs mt-1 mb-1.5">Exécution & organisation interne</p>
-        <p class="font-body text-gammaBodyText/45 text-xs leading-relaxed">Administration, RH, opérations métiers. Les agents qui structurent et fluidifient votre organisation au quotidien.</p>
-      </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.12s">
-        <span class="text-xl">🔒</span><div class="pill inline-block my-2">AXE 3</div>
-        <p class="font-heading font-semibold text-white text-xs mt-1 mb-1.5">Sécurité, conformité & structuration</p>
-        <p class="font-body text-gammaBodyText/45 text-xs leading-relaxed">Protection des données, conformité légale, qualité des informations. Les agents qui sécurisent et normalisent vos processus.</p>
-      </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.18s">
-        <span class="text-xl">📊</span><div class="pill inline-block my-2">AXE 4</div>
-        <p class="font-heading font-semibold text-white text-xs mt-1 mb-1.5">Pilotage & supervision stratégique</p>
-        <p class="font-body text-gammaBodyText/45 text-xs leading-relaxed">Analyse financière, business intelligence, supervision globale. Les agents qui éclairent vos décisions et pilotent la performance.</p>
-      </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.24s">
-        <span class="text-xl">🔧</span><div class="pill inline-block my-2">AXE 5</div>
-        <p class="font-heading font-semibold text-white text-xs mt-1 mb-1.5">Extensions métiers & agents sur mesure</p>
-        <p class="font-body text-gammaBodyText/45 text-xs leading-relaxed">Conception d'agents spécifiques et développement de systèmes IA personnalisés pour vos besoins uniques.</p>
-      </div>
-    </div>
-
-    <!-- AXE 1 agents -->
+    <!-- AXE 1 -->
     <div class="mb-10 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 1</span><span class="font-body font-semibold text-gammaBodyText text-sm">Croissance & relation client</span></div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Lead</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Acquisition & prospection</p>
-          <p class="font-body text-gammaBodyText/55 text-xs italic mb-3">Mission : Identifier, qualifier et engager des prospects de manière autonome et scalable.</p>
           <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Recherche et qualification automatisée de leads selon vos critères</li>
-            <li class="dot-li">Enrichissement des données prospects (secteur, taille, décideurs)</li>
-            <li class="dot-li">Scoring et priorisation selon votre modèle de conversion</li>
-            <li class="dot-li">Séquences de prospection multicanal (email, LinkedIn, formulaires)</li>
-            <li class="dot-li">Reporting en temps réel sur la qualité du pipeline</li>
+            <li class="dot-li">Qualification automatisée de leads</li>
+            <li class="dot-li">Enrichissement des données prospects</li>
+            <li class="dot-li">Scoring et priorisation</li>
+            <li class="dot-li">Prospection multicanal</li>
           </ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Voice</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Contact vocal scripté</p>
-          <p class="font-body text-gammaBodyText/55 text-xs italic mb-3">Mission : Gérer les appels sortants et entrants avec un script professionnel et une voix naturelle.</p>
           <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Appels de qualification, prise de rendez-vous, relances</li>
-            <li class="dot-li">Réponses aux questions fréquentes avec tonalité adaptée</li>
-            <li class="dot-li">Transfert intelligent vers un humain si nécessaire</li>
-            <li class="dot-li">Enregistrement et transcription automatique des échanges</li>
-            <li class="dot-li">Intégration CRM pour suivi des interactions</li>
+            <li class="dot-li">Appels de qualification & RDV</li>
+            <li class="dot-li">Réponses aux questions fréquentes</li>
+            <li class="dot-li">Transfert intelligent vers humain</li>
+            <li class="dot-li">Transcription automatique</li>
           </ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Care</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Support & relation client</p>
-          <p class="font-body text-gammaBodyText/55 text-xs italic mb-3">Mission : Assurer un support client réactif, cohérent et disponible 24/7.</p>
           <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Réponses instantanées aux questions récurrentes</li>
-            <li class="dot-li">Gestion des tickets et escalade intelligente</li>
-            <li class="dot-li">Suivi proactif de la satisfaction client</li>
-            <li class="dot-li">Base de connaissances évolutive et auto-apprenante</li>
-            <li class="dot-li">Multicanal (chat, email, messagerie)</li>
+            <li class="dot-li">Support 24/7 multicanal</li>
+            <li class="dot-li">Gestion des tickets & escalade</li>
+            <li class="dot-li">Suivi satisfaction client</li>
+            <li class="dot-li">Base de connaissances évolutive</li>
           </ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Marketing</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Contenu & diffusion</p>
-          <p class="font-body text-gammaBodyText/55 text-xs italic mb-3">Mission : Produire et diffuser du contenu marketing aligné avec votre stratégie.</p>
           <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Génération de contenus (posts, newsletters, articles)</li>
-            <li class="dot-li">Planification et publication multicanal</li>
-            <li class="dot-li">Adaptation du ton et du format selon la plateforme</li>
-            <li class="dot-li">Analyse des performances et optimisation continue</li>
-            <li class="dot-li">Veille concurrentielle et tendances sectorielles</li>
+            <li class="dot-li">Génération de contenus marketing</li>
+            <li class="dot-li">Publication multicanal planifiée</li>
+            <li class="dot-li">Analyse des performances</li>
+            <li class="dot-li">Veille concurrentielle</li>
           </ul>
         </div>
       </div>
     </div>
 
-    <!-- AXE 2 agents -->
+    <!-- AXE 2 -->
     <div class="mb-10 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 2</span><span class="font-body font-semibold text-gammaBodyText text-sm">Exécution & organisation interne</span></div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Flow</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Orchestration centrale</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Routage intelligent des tâches entre agents</li>
-            <li class="dot-li">Gestion des dépendances et des priorités</li>
-            <li class="dot-li">Synchronisation des données entre systèmes</li>
-            <li class="dot-li">Monitoring de l'activité globale des agents</li>
-            <li class="dot-li">Détection et résolution des conflits opérationnels</li>
-          </ul>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Routage intelligent des tâches</li><li class="dot-li">Gestion des dépendances</li><li class="dot-li">Synchronisation des données</li><li class="dot-li">Monitoring global</li></ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Admin</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Administration & structuration</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Gestion documentaire et archivage intelligent</li>
-            <li class="dot-li">Traitement automatisé des factures, devis, contrats</li>
-            <li class="dot-li">Suivi des échéances et relances administratives</li>
-            <li class="dot-li">Génération de rapports et tableaux de bord</li>
-            <li class="dot-li">Conformité des processus internes</li>
-          </ul>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Gestion documentaire</li><li class="dot-li">Traitement factures & contrats</li><li class="dot-li">Suivi des échéances</li><li class="dot-li">Conformité des processus</li></ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis People</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Support RH & onboarding</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Onboarding automatisé (documents, accès, formation)</li>
-            <li class="dot-li">Réponses aux questions RH courantes</li>
-            <li class="dot-li">Gestion des congés et absences</li>
-            <li class="dot-li">Suivi des évaluations et feedbacks</li>
-            <li class="dot-li">Base de connaissances RH accessible 24/7</li>
-          </ul>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Onboarding automatisé</li><li class="dot-li">Questions RH courantes 24/7</li><li class="dot-li">Gestion congés & absences</li><li class="dot-li">Suivi évaluations & feedbacks</li></ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Ops</p>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Exécution opérationnelle métier</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Exécution de workflows métiers complexes</li>
-            <li class="dot-li">Traitement de données opérationnelles en masse</li>
-            <li class="dot-li">Intégration avec vos outils métiers existants</li>
-            <li class="dot-li">Automatisation de tâches répétitives sectorielles</li>
-            <li class="dot-li">Reporting opérationnel en temps réel</li>
-          </ul>
+          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Exécution opérationnelle</p>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Workflows métiers complexes</li><li class="dot-li">Traitement de données en masse</li><li class="dot-li">Intégration outils existants</li><li class="dot-li">Reporting temps réel</li></ul>
         </div>
       </div>
     </div>
 
-    <!-- AXE 3 agents -->
+    <!-- AXE 3 -->
     <div class="mb-10 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 3</span><span class="font-body font-semibold text-gammaBodyText text-sm">Sécurité, conformité & structuration</span></div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Secure</p>
           <p class="font-body text-gammaBodyText/40 text-xs mb-3">Sécurité & continuité digitale</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Surveillance continue des menaces et vulnérabilités</li>
-            <li class="dot-li">Gestion des accès et des permissions</li>
-            <li class="dot-li">Sauvegardes automatisées et plans de reprise</li>
-            <li class="dot-li">Détection d'anomalies et alertes en temps réel</li>
-            <li class="dot-li">Conformité RGPD et normes de sécurité</li>
-          </ul>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Surveillance des menaces</li><li class="dot-li">Gestion accès & permissions</li><li class="dot-li">Sauvegardes automatisées</li><li class="dot-li">Conformité RGPD</li></ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Legal</p>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Assistance conformité (non-avocat)</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Veille réglementaire sectorielle automatisée</li>
-            <li class="dot-li">Génération de documents juridiques standards</li>
-            <li class="dot-li">Suivi des échéances légales et obligations</li>
-            <li class="dot-li">Analyse de conformité contractuelle</li>
-            <li class="dot-li">Base de connaissances juridiques actualisée</li>
-          </ul>
+          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Assistance conformité</p>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Veille réglementaire automatisée</li><li class="dot-li">Documents juridiques standards</li><li class="dot-li">Suivi échéances légales</li><li class="dot-li">Analyse conformité contractuelle</li></ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Finance</p>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Pilotage financier (non-comptable)</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Consolidation automatisée des données financières</li>
-            <li class="dot-li">Tableaux de bord et KPIs en temps réel</li>
-            <li class="dot-li">Prévisions et scénarios budgétaires</li>
-            <li class="dot-li">Détection d'anomalies et alertes de trésorerie</li>
-            <li class="dot-li">Reporting financier automatisé</li>
-          </ul>
+          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Pilotage financier</p>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Consolidation données financières</li><li class="dot-li">KPIs et tableaux de bord</li><li class="dot-li">Prévisions budgétaires</li><li class="dot-li">Alertes trésorerie</li></ul>
         </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);">
           <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Data</p>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Structuration & qualité des données</p>
-          <ul class="space-y-1.5 text-xs">
-            <li class="dot-li">Nettoyage et normalisation automatisée</li>
-            <li class="dot-li">Détection et correction des doublons</li>
-            <li class="dot-li">Enrichissement des données manquantes</li>
-            <li class="dot-li">Synchronisation entre bases et systèmes</li>
-            <li class="dot-li">Audit de qualité et scoring des données</li>
-          </ul>
+          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Qualité des données</p>
+          <ul class="space-y-1.5 text-xs"><li class="dot-li">Nettoyage & normalisation</li><li class="dot-li">Détection des doublons</li><li class="dot-li">Enrichissement des données</li><li class="dot-li">Audit qualité & scoring</li></ul>
         </div>
       </div>
     </div>
@@ -952,116 +910,50 @@
     <!-- AXE 4 + 5 -->
     <div class="grid md:grid-cols-2 gap-6 mb-12 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <div>
-        <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 4</span><span class="font-body font-semibold text-gammaBodyText text-sm">Pilotage & supervision stratégique</span></div>
+        <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 4</span><span class="font-body font-semibold text-gammaBodyText text-sm">Pilotage & supervision</span></div>
         <div class="grid gap-4">
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+          <div class="g-card" style="border-color:rgba(169,91,149,.12);">
             <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Insight</p>
             <p class="font-body text-gammaBodyText/40 text-xs mb-3">Analyse & aide à la décision</p>
-            <ul class="space-y-1.5 text-xs">
-              <li class="dot-li">Analyse prédictive et détection de tendances</li>
-              <li class="dot-li">Tableaux de bord personnalisés par fonction</li>
-              <li class="dot-li">Recommandations basées sur les données historiques</li>
-              <li class="dot-li">Alertes intelligentes sur les écarts et opportunités</li>
-              <li class="dot-li">Reporting automatisé multi-niveaux</li>
-            </ul>
+            <ul class="space-y-1.5 text-xs"><li class="dot-li">Analyse prédictive & tendances</li><li class="dot-li">Tableaux de bord personnalisés</li><li class="dot-li">Alertes intelligentes</li></ul>
           </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.25);">
+          <div class="g-card" style="border-color:rgba(169,91,149,.25);">
             <div class="flex items-center justify-between mb-0.5">
               <p class="font-heading font-semibold text-gammaPrimary text-sm">Jarvis Control</p>
               <span class="pill">Premium</span>
             </div>
             <p class="font-body text-gammaBodyText/40 text-xs mb-3">Supervision globale</p>
-            <ul class="space-y-1.5 text-xs">
-              <li class="dot-li">Vue d'ensemble en temps réel de tous les agents actifs</li>
-              <li class="dot-li">Détection d'anomalies et conflits inter-agents</li>
-              <li class="dot-li">Optimisation automatique des ressources et priorités</li>
-              <li class="dot-li">Reporting exécutif consolidé</li>
-              <li class="dot-li">Gouvernance et audit des décisions automatisées</li>
-            </ul>
+            <ul class="space-y-1.5 text-xs"><li class="dot-li">Vue temps réel de tous les agents</li><li class="dot-li">Optimisation automatique</li><li class="dot-li">Gouvernance & audit</li></ul>
           </div>
         </div>
       </div>
       <div>
-        <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 5</span><span class="font-body font-semibold text-gammaBodyText text-sm">Extensions métiers & agents sur mesure</span></div>
+        <div class="flex items-center gap-3 mb-5"><span class="pill">AXE 5</span><span class="font-body font-semibold text-gammaBodyText text-sm">Extensions & sur mesure</span></div>
         <div class="grid gap-4">
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+          <div class="g-card" style="border-color:rgba(169,91,149,.12);">
             <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Architect</p>
             <p class="font-body text-gammaBodyText/40 text-xs mb-3">Concepteur d'agents & systèmes IA</p>
-            <ul class="space-y-1.5 text-xs">
-              <li class="dot-li">Analyse de vos processus métiers uniques</li>
-              <li class="dot-li">Conception d'agents personnalisés</li>
-              <li class="dot-li">Intégration avec vos systèmes existants</li>
-              <li class="dot-li">Tests et optimisation des nouveaux agents</li>
-              <li class="dot-li">Documentation technique et formation</li>
-            </ul>
+            <ul class="space-y-1.5 text-xs"><li class="dot-li">Analyse de vos processus uniques</li><li class="dot-li">Conception d'agents personnalisés</li><li class="dot-li">Tests & optimisation</li></ul>
           </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+          <div class="g-card" style="border-color:rgba(169,91,149,.12);">
             <p class="font-heading font-semibold text-gammaPrimary text-sm mb-0.5">Jarvis Custom</p>
             <p class="font-body text-gammaBodyText/40 text-xs mb-3">Agent sur mesure métier</p>
-            <ul class="space-y-1.5 text-xs">
-              <li class="dot-li">Fonction entièrement personnalisée selon votre cahier des charges</li>
-              <li class="dot-li">Intégration native avec votre stack technologique</li>
-              <li class="dot-li">Évolution continue selon vos retours</li>
-              <li class="dot-li">Documentation et formation dédiées</li>
-              <li class="dot-li">Support prioritaire et maintenance incluse</li>
-            </ul>
+            <ul class="space-y-1.5 text-xs"><li class="dot-li">Fonction entièrement personnalisée</li><li class="dot-li">Intégration native à votre stack</li><li class="dot-li">Support prioritaire inclus</li></ul>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stacks -->
-    <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      <div class="tag mb-4"><span class="tag-dot"></span>Stacks stratégiques</div>
-      <h3 class="font-heading font-bold text-white text-2xl mb-3">Combinaisons d'agents conçues pour des objectifs métiers précis</h3>
-      <p class="font-body text-gammaBodyText/60 mb-8 leading-relaxed text-sm">Les agents AI TechLabs sont conçus pour fonctionner ensemble. Voici 5 stacks types qui répondent aux enjeux les plus fréquents. Chaque stack est personnalisable selon votre contexte.</p>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <span class="text-lg">📈</span><h4 class="font-heading font-bold text-white text-sm my-2">Growth Stack</h4>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Startups, scale-ups en croissance</p>
-          <div class="flex flex-wrap gap-1"><span class="pill">Lead</span><span class="pill">Voice</span><span class="pill">Marketing</span><span class="pill">Care</span><span class="pill">Data</span><span class="pill">Insight</span></div>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <span class="text-lg">⚙️</span><h4 class="font-heading font-bold text-white text-sm my-2">Ops Stack</h4>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">PME structurées, opérations complexes</p>
-          <div class="flex flex-wrap gap-1"><span class="pill">Flow</span><span class="pill">Admin</span><span class="pill">Ops</span><span class="pill">People</span><span class="pill">Data</span><span class="pill">Insight</span></div>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <span class="text-lg">🔐</span><h4 class="font-heading font-bold text-white text-sm my-2">Secure Stack</h4>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Finance, santé, secteurs réglementés</p>
-          <div class="flex flex-wrap gap-1"><span class="pill">Secure</span><span class="pill">Legal</span><span class="pill">Finance</span><span class="pill">Data</span><span class="pill">Admin</span><span class="pill">Control</span></div>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <span class="text-lg">💬</span><h4 class="font-heading font-bold text-white text-sm my-2">Support Stack</h4>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Services clients à fort volume</p>
-          <div class="flex flex-wrap gap-1"><span class="pill">Care</span><span class="pill">Voice</span><span class="pill">Flow</span><span class="pill">Data</span><span class="pill">Insight</span><span class="pill">Admin</span></div>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <span class="text-lg">🏢</span><h4 class="font-heading font-bold text-white text-sm my-2">Enterprise Stack</h4>
-          <p class="font-body text-gammaBodyText/40 text-xs mb-3">Grandes organisations multi-sites</p>
-          <div class="flex flex-wrap gap-1"><span class="pill">Control</span><span class="pill">Flow</span><span class="pill">Insight</span><span class="pill">Finance</span><span class="pill">Data</span><span class="pill">Secure</span><span class="pill">Architect</span></div>
         </div>
       </div>
     </div>
 
     <!-- Architecture CTA -->
-    <div class="mt-14 rounded-2xl p-8 md:p-12 text-center scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+    <div class="rounded-2xl p-8 md:p-12 text-center scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
          style="background:linear-gradient(135deg,rgba(169,91,149,.08),rgba(11,12,35,.9));border:1px solid rgba(169,91,149,.22);">
       <h3 class="font-heading font-bold text-white text-2xl md:text-3xl mb-4">Construisons votre architecture IA</h3>
-      <p class="font-body text-gammaBodyText/65 max-w-2xl mx-auto mb-4 leading-relaxed text-sm">
+      <p class="font-body text-gammaBodyText/65 max-w-2xl mx-auto mb-8 leading-relaxed text-sm">
         Chaque entreprise a des besoins uniques. Les 16 agents AI TechLabs forment une architecture modulaire que nous adaptons à votre réalité opérationnelle.
       </p>
-      <p class="font-body text-gammaBodyText/55 max-w-2xl mx-auto mb-8 leading-relaxed text-sm">
-        Nous ne vendons pas de solution clé en main. Nous concevons des systèmes d'agents sur mesure, déployés progressivement, testés en conditions réelles et optimisés dans la durée.
-      </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#contact"
-           class="bg-gammaPrimary text-white rounded-lg px-6 py-3 hover:opacity-80 transition-all duration-300 font-heading font-medium inline-flex items-center justify-center">
-          Demander une étude personnalisée
-        </a>
-        <a href="#contact" class="btn-outline rounded-lg px-6 py-3 inline-flex items-center justify-center">
-          Échanger sur votre projet
-        </a>
+        <a href="#contact" class="btn-primary justify-center">Demander une étude personnalisée</a>
+        <a href="#contact" class="btn-outline justify-center">Échanger sur votre projet</a>
       </div>
     </div>
 
@@ -1069,294 +961,174 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      TARIFS
-══════════════════════════════════════════════ -->
-<section id="tarifs" class="py-24 bg-gammaBg section-line relative overflow-hidden">
+══════════════════════════════════════════════════ -->
+<section id="tarifs" class="py-24 grid-bg section-line relative overflow-hidden">
   <div class="orb w-[360px] h-[360px] -top-16 right-0 opacity-18"
        style="background:radial-gradient(circle,rgba(169,91,149,.18) 0%,transparent 70%)"></div>
-
   <div class="max-w-7xl mx-auto px-6">
 
     <div class="tag mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Tarification
     </div>
-    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      Agents IA – Niveaux d'exécution automatisée
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-4
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      Agents IA – Niveaux d'exécution
     </h2>
-    <p class="font-body text-gammaBodyText/70 max-w-3xl mb-14 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      Nos agents IA sont conçus comme des outils d'exécution métier, paramétrés selon votre contexte. Ils répondent à la demande et aux besoins de plus de 95% des entreprises. Les délais sont volontairement standardisés afin de garantir un niveau de qualité constant.
+    <p class="font-body text-gammaBodyText/70 max-w-3xl mb-14 leading-relaxed
+              scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+      Nos agents IA sont conçus comme des outils d'exécution métier, paramétrés selon votre contexte. Livraison standard sous 5 à 7 jours ouvrables.
     </p>
 
-    <!-- 5 levels -->
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-14">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-           style="border-color:rgba(169,91,149,.12);">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12);">
         <div class="num-circle mb-4">1</div>
-        <h4 class="font-heading font-bold text-white mb-1">Agent IA Starter</h4>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-1">1&nbsp;500 € <span class="text-gammaBodyText/35 font-body font-normal text-sm">à</span></p>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">2&nbsp;500 €</p>
-        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent d'assistance simple pour tâches basiques et répétitives. Interface intuitive, logique d'exécution directe, idéal pour premiers pas dans l'automatisation.</p>
+        <h4 class="font-heading font-bold text-white mb-1">Starter</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">1 500€ – 2 500€</p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent d'assistance simple pour tâches basiques et répétitives.</p>
         <hr style="border-color:rgba(169,91,149,.1);" class="mb-4"/>
         <ul class="space-y-1.5 text-xs font-body text-gammaBodyText/55">
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Livraison 5–7 jours ouvrables</li>
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Cadrage selon cahier des charges</li>
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Formation à l'utilisation incluse</li>
+          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Livraison 5–7 jours</li>
+          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Formation incluse</li>
         </ul>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-           style="border-color:rgba(169,91,149,.12); transition-delay:.06s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.06s">
         <div class="num-circle mb-4">2</div>
-        <h4 class="font-heading font-bold text-white mb-1">Agent IA Essentiel</h4>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-1">2&nbsp;500 € <span class="text-gammaBodyText/35 font-body font-normal text-sm">à</span></p>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">3&nbsp;500 €</p>
-        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent polyvalent pour processus métiers standards. Gestion de flux multiples, intégrations basiques, capacité de traitement accrue.</p>
+        <h4 class="font-heading font-bold text-white mb-1">Essentiel</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">2 500€ – 3 500€</p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent polyvalent pour processus métiers standards.</p>
         <hr style="border-color:rgba(169,91,149,.1);" class="mb-4"/>
         <ul class="space-y-1.5 text-xs font-body text-gammaBodyText/55">
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Livraison 5–7 jours ouvrables</li>
           <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Intégrations basiques</li>
           <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Formation incluse</li>
         </ul>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-           style="border-color:rgba(169,91,149,.45);box-shadow:0 0 35px rgba(169,91,149,.14); transition-delay:.12s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+           style="border-color:rgba(169,91,149,.5);box-shadow:0 0 35px rgba(169,91,149,.16); transition-delay:.12s">
         <div class="flex justify-between items-start mb-4">
           <div class="num-circle">3</div>
           <span class="tag text-[.6rem]">Populaire</span>
         </div>
-        <h4 class="font-heading font-bold text-white mb-1">Agent IA Avancé</h4>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-1">3&nbsp;500 € <span class="text-gammaBodyText/35 font-body font-normal text-sm">à</span></p>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">5&nbsp;000 €</p>
-        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent sophistiqué avec logique conditionnelle avancée. Traitement de données complexes, gestion multi-scénarios, intégrations poussées.</p>
+        <h4 class="font-heading font-bold text-white mb-1">Avancé</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">3 500€ – 5 000€</p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent sophistiqué avec logique conditionnelle avancée.</p>
         <hr style="border-color:rgba(169,91,149,.15);" class="mb-4"/>
         <ul class="space-y-1.5 text-xs font-body text-gammaBodyText/55">
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Livraison 5–7 jours ouvrables</li>
           <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Multi-scénarios</li>
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Options sur mesure possibles</li>
+          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Options sur mesure</li>
         </ul>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-           style="border-color:rgba(169,91,149,.12); transition-delay:.18s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.18s">
         <div class="num-circle mb-4">4</div>
-        <h4 class="font-heading font-bold text-white mb-1">Agent IA Signature</h4>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-1">5&nbsp;000 € <span class="text-gammaBodyText/35 font-body font-normal text-sm">à</span></p>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">8&nbsp;000 €</p>
-        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent premium pour opérations critiques. Architecture robuste, sécurité renforcée, capacités d'analyse avancées.</p>
+        <h4 class="font-heading font-bold text-white mb-1">Signature</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">5 000€ – 8 000€</p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent premium pour opérations critiques.</p>
         <hr style="border-color:rgba(169,91,149,.1);" class="mb-4"/>
         <ul class="space-y-1.5 text-xs font-body text-gammaBodyText/55">
           <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Sécurité renforcée</li>
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Architecture robuste</li>
           <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Formation incluse</li>
         </ul>
       </div>
 
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-           style="border-color:rgba(169,91,149,.28); transition-delay:.24s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.28); transition-delay:.24s">
         <div class="num-circle mb-4" style="background:linear-gradient(135deg,#9A4A85,#C478AE);">5</div>
-        <h4 class="font-heading font-bold text-white mb-1">Agent IA Elite</h4>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-1">8&nbsp;000 € <span class="text-gammaBodyText/35 font-body font-normal text-sm">à</span></p>
-        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">12&nbsp;000 €</p>
-        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent d'excellence pour systèmes stratégiques. Architecture sur mesure, intelligence décisionnelle maximale, standards institutionnels premium.</p>
+        <h4 class="font-heading font-bold text-white mb-1">Elite</h4>
+        <p class="text-gammaPrimary font-heading font-bold text-xl mb-3">8 000€ – 12 000€</p>
+        <p class="font-body text-gammaBodyText/55 text-xs leading-relaxed mb-4">Agent d'excellence pour systèmes stratégiques.</p>
         <hr style="border-color:rgba(169,91,149,.14);" class="mb-4"/>
         <ul class="space-y-1.5 text-xs font-body text-gammaBodyText/55">
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Architecture sur mesure</li>
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Intelligence décisionnelle maximale</li>
-          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Standards institutionnels premium</li>
+          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Intelligence décisionnelle max</li>
+          <li class="flex gap-2"><span class="text-gammaPrimary">✓</span>Standards institutionnels</li>
         </ul>
       </div>
 
     </div>
 
-    <p class="font-body text-gammaBodyText/45 text-xs text-center mb-8 italic scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      Les agents sont livrés exploitables. L'objectif est de vous rendre maître de votre système, sans dépendance artificielle.
-    </p>
-
-    <!-- Apps + Sites -->
-    <div class="grid md:grid-cols-2 gap-8 mb-12">
-      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-        <div class="tag mb-4"><span class="tag-dot"></span>Applications web et mobile</div>
-        <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed mb-5">
-          Nous concevons des applications métiers rapides à déployer, claires à utiliser et pensées pour évoluer. L'architecture est maîtrisée, l'interface intuitive et l'exploitation immédiate.
-        </p>
-        <div class="space-y-3">
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Application Essentielle</p><p class="font-body text-gammaBodyText/45 text-xs mt-0.5">Interface claire, déploiement rapide.</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">2&nbsp;000€ – 3&nbsp;500€</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Application Avancée</p><p class="font-body text-gammaBodyText/45 text-xs mt-0.5">Logiques complexes, intégrations multiples.</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">3&nbsp;500€ – 6&nbsp;000€</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-        <div class="tag mb-4"><span class="tag-dot"></span>Sites internet & landing pages</div>
-        <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed mb-5">
-          Un site bien conçu n'est pas une simple présence. C'est un actif qui structure la confiance et facilite la décision.
-        </p>
-        <div class="space-y-3">
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Landing page de conversion</p><p class="font-body text-gammaBodyText/45 text-xs mt-0.5">Message ciblé, appel à l'action clair.</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">à partir de 1&nbsp;200€</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Site vitrine standard</p><p class="font-body text-gammaBodyText/45 text-xs mt-0.5">Jusqu'à 5 pages, responsive design.</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">2&nbsp;000€ – 3&nbsp;500€</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Site vitrine premium</p><p class="font-body text-gammaBodyText/45 text-xs mt-0.5">Identité forte, animations subtiles.</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">3&nbsp;500€ – 6&nbsp;000€</span>
-          </div>
-        </div>
+    <!-- Maintenance -->
+    <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out mb-8">
+      <div class="tag mb-4"><span class="tag-dot"></span>Continuité</div>
+      <h3 class="font-heading font-semibold text-white text-lg mb-5">Plans de maintenance mensuelle</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);"><h4 class="font-heading font-bold text-white text-sm mb-1">Essentielle</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-1">150€<span class="text-gammaBodyText/30 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/50 text-xs">Surveillance mensuelle, support 48h.</p></div>
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);"><h4 class="font-heading font-bold text-white text-sm mb-1">Standard</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-1">250€<span class="text-gammaBodyText/30 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/50 text-xs">Surveillance hebdo, support 24h.</p></div>
+        <div class="g-card" style="border-color:rgba(169,91,149,.12);"><h4 class="font-heading font-bold text-white text-sm mb-1">Pro</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-1">350€<span class="text-gammaBodyText/30 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/50 text-xs">Surveillance continue, support 12h.</p></div>
+        <div class="g-card" style="border-color:rgba(169,91,149,.4);box-shadow:0 0 28px rgba(169,91,149,.12);"><h4 class="font-heading font-bold text-white text-sm mb-1">Signature</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-1">450€<span class="text-gammaBodyText/30 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/50 text-xs">Surveillance 24/7, conseil trimestriel.</p></div>
+        <div class="g-card" style="border-color:rgba(169,91,149,.22);"><h4 class="font-heading font-bold text-white text-sm mb-1">Elite</h4><p class="text-gammaPrimary font-heading font-bold text-lg mb-1">500€<span class="text-gammaBodyText/30 font-body font-normal text-xs">/mois</span></p><p class="font-body text-gammaBodyText/50 text-xs">Accompagnement stratégique continu.</p></div>
       </div>
     </div>
 
-    <!-- Options complémentaires -->
-    <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out mb-12">
-      <div class="tag mb-4"><span class="tag-dot"></span>Personnalisation</div>
-      <h3 class="font-heading font-bold text-white text-xl mb-2">Options complémentaires</h3>
-      <p class="font-body text-gammaBodyText/60 text-sm mb-6 leading-relaxed">Chaque projet est unique. Ces options vous permettent d'adapter nos solutions à vos contraintes spécifiques.</p>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <p class="font-heading font-semibold text-white text-sm mb-1">Intégration technique avancée</p>
-          <p class="text-gammaPrimary font-heading font-bold mb-2">+500 €</p>
-          <p class="font-body text-gammaBodyText/50 text-xs">Connexion à vos systèmes existants, API tierces, bases de données externes</p>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <p class="font-heading font-semibold text-white text-sm mb-1">Agent IA complémentaire</p>
-          <p class="text-gammaPrimary font-heading font-bold mb-2">+800 €</p>
-          <p class="font-body text-gammaBodyText/50 text-xs">Module supplémentaire pour étendre les capacités de votre système principal</p>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <p class="font-heading font-semibold text-white text-sm mb-1">Livraison 72h / 48h / 24h</p>
-          <p class="text-gammaPrimary font-heading font-bold mb-2">+800 € / +1&nbsp;200 € / +2&nbsp;000 €</p>
-          <p class="font-body text-gammaBodyText/50 text-xs">Développement accéléré avec maintien des standards qualité</p>
-        </div>
-        <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-5 border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
-          <p class="font-heading font-semibold text-white text-sm mb-1">Documentation étendue</p>
-          <p class="text-gammaPrimary font-heading font-bold mb-2">+300 €</p>
-          <p class="font-body text-gammaBodyText/50 text-xs">Manuel d'utilisation détaillé, guides de maintenance, documentation technique complète</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Audit + Maintenance -->
-    <div class="grid md:grid-cols-2 gap-8 mb-8">
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-8 border border-gray-800 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-           style="border-color:rgba(169,91,149,.2);">
-        <div class="tag mb-4"><span class="tag-dot"></span>Audit digital</div>
-        <h3 class="font-heading font-bold text-white text-xl mb-3">Rapport business stratégique</h3>
-        <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed mb-5">Un audit ponctuel pour comprendre votre niveau de maturité digitale, identifier les opportunités et orienter vos décisions. Prestation indépendante, sans engagement.</p>
-        <div class="space-y-3 mb-6">
-          <div class="flex gap-3 items-start"><span class="num-circle text-xs" style="min-width:2rem;">1</span><div><p class="font-heading font-semibold text-white text-xs">Échange de 30 minutes</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Discussion approfondie sur vos enjeux, contexte et objectifs business</p></div></div>
-          <div class="flex gap-3 items-start"><span class="num-circle text-xs" style="min-width:2rem;">2</span><div><p class="font-heading font-semibold text-white text-xs">Analyse stratégique</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Évaluation de votre écosystème digital, identification des leviers prioritaires</p></div></div>
-          <div class="flex gap-3 items-start"><span class="num-circle text-xs" style="min-width:2rem;">3</span><div><p class="font-heading font-semibold text-white text-xs">Rapport PDF structuré</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Document actionnable avec recommandations hiérarchisées</p></div></div>
-          <div class="flex gap-3 items-start"><span class="num-circle text-xs" style="min-width:2rem;">4</span><div><p class="font-heading font-semibold text-white text-xs">Aucune obligation de suivi</p><p class="font-body text-gammaBodyText/50 text-xs mt-0.5">Vous gardez le contrôle total sur vos décisions</p></div></div>
-        </div>
-        <p class="text-gammaPrimary font-heading font-extrabold text-3xl mb-1">500 €</p>
-        <p class="font-body text-gammaBodyText/45 text-xs mb-4">Investissement dans la clarté stratégique</p>
-        <a href="#contact"
-           class="bg-gammaPrimary text-white rounded-lg px-6 py-3 hover:opacity-80 transition-all duration-300 font-heading font-medium text-sm inline-block">
-          Réserver un audit
-        </a>
-      </div>
-
-      <div class="scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-        <div class="tag mb-4"><span class="tag-dot"></span>Continuité</div>
-        <h3 class="font-heading font-bold text-white text-xl mb-3">Maintenance et évolutions</h3>
-        <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed mb-5">Une solution fiable se pense dans la durée. La maintenance protège la stabilité, la sécurité et la continuité de votre système.</p>
-        <div class="space-y-3">
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Maintenance Essentielle</p><p class="font-body text-gammaBodyText/40 text-xs mt-0.5">Surveillance mensuelle, support email 48h</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">150€/mois</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Maintenance Standard</p><p class="font-body text-gammaBodyText/40 text-xs mt-0.5">Surveillance hebdomadaire, support prioritaire 24h</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">250€/mois</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.12);">
-            <div><p class="font-heading font-semibold text-white text-sm">Maintenance Pro</p><p class="font-body text-gammaBodyText/40 text-xs mt-0.5">Surveillance continue, support 12h</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">350€/mois</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.3);">
-            <div><p class="font-heading font-semibold text-white text-sm">Maintenance Signature</p><p class="font-body text-gammaBodyText/40 text-xs mt-0.5">Surveillance 24/7, conseil trimestriel</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">450€/mois</span>
-          </div>
-          <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-4 border border-gray-800 card-hover flex justify-between items-center" style="border-color:rgba(169,91,149,.22);">
-            <div><p class="font-heading font-semibold text-white text-sm">Maintenance Elite</p><p class="font-body text-gammaBodyText/40 text-xs mt-0.5">Surveillance dédiée 24/7, accompagnement stratégique continu</p></div>
-            <span class="text-gammaPrimary font-heading font-bold text-sm flex-shrink-0 ml-4">500€/mois</span>
-          </div>
-        </div>
-      </div>
+    <!-- Audit card -->
+    <div class="g-card md:p-8 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+         style="border-color:rgba(169,91,149,.2); max-width:560px;">
+      <div class="tag mb-4"><span class="tag-dot"></span>Audit digital</div>
+      <h3 class="font-heading font-bold text-white text-xl mb-3">Rapport business stratégique</h3>
+      <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed mb-5">Audit ponctuel de maturité digitale avec rapport PDF structuré et recommandations actionnables.</p>
+      <p class="text-gammaPrimary font-heading font-extrabold text-3xl mb-1">500 €</p>
+      <p class="font-body text-gammaBodyText/45 text-xs mb-4">Investissement dans la clarté stratégique</p>
+      <a href="#contact" class="btn-primary text-sm">Réserver un audit</a>
     </div>
 
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      PROCESSUS
-══════════════════════════════════════════════ -->
-<section id="processus" class="py-24 grid-bg section-line relative overflow-hidden">
-  <div class="orb w-80 h-80 bottom-0 left-1/2 -translate-x-1/2 opacity-15"
-       style="background:radial-gradient(circle,rgba(169,91,149,.2) 0%,transparent 70%)"></div>
-
+══════════════════════════════════════════════════ -->
+<section id="processus" class="py-24 bg-gammaBg section-line relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-6">
 
     <div class="tag mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Processus de travail
     </div>
-    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl mb-14
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Une méthodologie <span class="g-text-pink">éprouvée</span>
     </h2>
-    <p class="font-body text-gammaBodyText text-lg max-w-3xl mb-14 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      Chaque projet suit une logique simple et maîtrisée. Nous commençons par analyser votre besoin, puis nous validons le périmètre avec précision pour éviter toute ambiguïté.
-    </p>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12);">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12);">
         <div class="flex items-center gap-3 mb-4"><div class="num-circle">1</div><h3 class="font-heading font-semibold text-white">Écoute et cadrage</h3></div>
         <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed">Compréhension approfondie de vos enjeux métiers et objectifs opérationnels</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.07s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.07s">
         <div class="flex items-center gap-3 mb-4"><div class="num-circle">2</div><h3 class="font-heading font-semibold text-white">Validation du périmètre</h3></div>
         <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed">Définition précise des fonctionnalités, livrables et critères de succès</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.14s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.14s">
         <div class="flex items-center gap-3 mb-4"><div class="num-circle">3</div><h3 class="font-heading font-semibold text-white">Contractualisation</h3></div>
         <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed">Formalisation claire des engagements, délais et modalités de collaboration</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.07s">
-        <div class="flex items-center gap-3 mb-4"><div class="num-circle">4</div><h3 class="font-heading font-semibold text-white">Conception et développement</h3></div>
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.07s">
+        <div class="flex items-center gap-3 mb-4"><div class="num-circle">4</div><h3 class="font-heading font-semibold text-white">Conception & développement</h3></div>
         <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed">Réalisation technique selon méthodologie éprouvée et standards qualité</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.14s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.12); transition-delay:.14s">
         <div class="flex items-center gap-3 mb-4"><div class="num-circle">5</div><h3 class="font-heading font-semibold text-white">Tests et validation</h3></div>
         <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed">Vérification exhaustive de la conformité et de la performance</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 border border-gray-800 card-hover scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.28); transition-delay:.21s">
+      <div class="g-card scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out" style="border-color:rgba(169,91,149,.28); transition-delay:.21s">
         <div class="flex items-center gap-3 mb-4"><div class="num-circle">6</div><h3 class="font-heading font-semibold text-white">Livraison et transfert</h3></div>
         <p class="font-body text-gammaBodyText/60 text-sm leading-relaxed">Mise en production, documentation complète et formation utilisateur</p>
       </div>
     </div>
 
     <div class="grid md:grid-cols-2 gap-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-8 border border-gray-800" style="border-color:rgba(169,91,149,.15);">
+      <div class="g-card" style="border-color:rgba(169,91,149,.15);">
         <h3 class="font-heading font-bold text-white text-xl mb-4">Cadre et responsabilité</h3>
-        <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed mb-3">Les agents IA sont des systèmes techniques dépourvus de conscience ou de jugement autonome. Ils fonctionnent selon des règles définies, programmées et paramétrées par des humains, pour des humains.</p>
-        <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed">Nous nous engageons sur la qualité technique, la conformité fonctionnelle et la fiabilité opérationnelle de nos systèmes. <strong class="text-white">Les résultats métiers restent sous votre contrôle et votre responsabilité.</strong></p>
+        <p class="font-body text-gammaBodyText/65 text-sm leading-relaxed">Nous nous engageons sur la qualité technique, la conformité fonctionnelle et la fiabilité opérationnelle. <strong class="text-white">Les résultats métiers restent sous votre contrôle et votre responsabilité.</strong></p>
       </div>
       <div class="rounded-2xl p-8 flex flex-col justify-center text-center"
            style="background:linear-gradient(135deg,rgba(169,91,149,.08),rgba(11,12,35,.9));border:1px solid rgba(169,91,149,.2);">
         <p class="font-heading font-bold text-white text-2xl mb-2">La technologie est un levier</p>
         <div class="w-10 h-px mx-auto mb-3" style="background:linear-gradient(90deg,#7B3D6B,#A95B95);"></div>
         <p class="text-gammaPrimary font-heading font-semibold text-lg mb-3">La direction reste humaine</p>
-        <p class="font-body text-gammaBodyText/55 text-sm leading-relaxed">Cette distinction est fondamentale. Elle protège votre autonomie décisionnelle tout en garantissant des outils fiables et performants. <strong class="text-white">Nous créons les instruments. Vous orchestrez la performance.</strong></p>
+        <p class="font-body text-gammaBodyText/55 text-sm leading-relaxed"><strong class="text-white">Nous créons les instruments. Vous orchestrez la performance.</strong></p>
       </div>
     </div>
 
@@ -1364,68 +1136,71 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════════
-     PRENONS CONTACT (interstitielle)
-══════════════════════════════════════════════ -->
-<section class="py-24 bg-gammaBg relative overflow-hidden">
+<!-- ══════════════════════════════════════════════════
+     CTA INTERSTITIELLE
+══════════════════════════════════════════════════ -->
+<section class="py-24 grid-bg section-line relative overflow-hidden">
   <div class="orb w-[500px] h-[500px] -top-16 left-1/2 -translate-x-1/2 opacity-15"
        style="background:radial-gradient(circle,rgba(169,91,149,.2) 0%,transparent 70%)"></div>
   <div class="relative max-w-4xl mx-auto px-6 text-center">
     <div class="tag mb-6 inline-flex scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Prenons contact
     </div>
-    <h2 class="font-heading font-extrabold text-white leading-tight mb-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+    <h2 class="font-heading font-extrabold text-white leading-tight mb-6
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
         style="font-size:clamp(2.4rem,6vw,4.2rem);">
       Approche confidentielle,<br/>
       <span class="g-text-pink">professionnelle et sur mesure.</span>
     </h2>
-    <p class="font-body text-gammaBodyText/75 text-lg max-w-2xl mx-auto mb-12 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <p class="font-body text-gammaBodyText/75 text-lg max-w-2xl mx-auto mb-12 leading-relaxed
+              scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Nous privilégions les échanges simples, précis et utiles. Si votre besoin est sérieux, la réponse le sera aussi.
     </p>
     <div class="grid sm:grid-cols-3 gap-5 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 text-left border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+      <div class="g-card text-left" style="border-color:rgba(169,91,149,.12);">
         <div class="text-2xl mb-3">💬</div>
         <h3 class="font-heading font-bold text-white text-sm mb-2">Échanger sur un projet</h3>
-        <p class="font-body text-gammaBodyText/50 text-xs leading-relaxed">Discussion exploratoire sans engagement pour comprendre vos enjeux et évaluer les opportunités</p>
+        <p class="font-body text-gammaBodyText/50 text-xs leading-relaxed">Discussion exploratoire sans engagement pour comprendre vos enjeux</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 text-left border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.32);">
+      <div class="g-card text-left" style="border-color:rgba(169,91,149,.32);">
         <div class="text-2xl mb-3">📋</div>
         <h3 class="font-heading font-bold text-white text-sm mb-2">Demander une étude</h3>
-        <p class="font-body text-gammaBodyText/50 text-xs leading-relaxed">Analyse approfondie de votre besoin avec proposition détaillée et chiffrée</p>
+        <p class="font-body text-gammaBodyText/50 text-xs leading-relaxed">Analyse approfondie avec proposition détaillée et chiffrée</p>
       </div>
-      <div class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-6 text-left border border-gray-800 card-hover" style="border-color:rgba(169,91,149,.12);">
+      <div class="g-card text-left" style="border-color:rgba(169,91,149,.12);">
         <div class="text-2xl mb-3">🔍</div>
-        <h3 class="font-heading font-bold text-white text-sm mb-2">Réserver un audit stratégique</h3>
-        <p class="font-body text-gammaBodyText/50 text-xs leading-relaxed">Évaluation complète de votre maturité digitale avec rapport actionnable — 500 €</p>
+        <h3 class="font-heading font-bold text-white text-sm mb-2">Réserver un audit — 500€</h3>
+        <p class="font-body text-gammaBodyText/50 text-xs leading-relaxed">Évaluation de votre maturité digitale avec rapport PDF actionnable</p>
       </div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      CONTACT
-══════════════════════════════════════════════ -->
-<section id="contact" class="py-24 grid-bg section-line relative overflow-hidden">
+══════════════════════════════════════════════════ -->
+<section id="contact" class="py-24 bg-gammaBg section-line relative overflow-hidden">
   <div class="orb w-96 h-96 bottom-0 right-0 opacity-18"
        style="background:radial-gradient(circle,rgba(169,91,149,.18) 0%,transparent 70%)"></div>
-
   <div class="max-w-3xl mx-auto px-6">
     <div class="tag mb-4 text-center block scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       <span class="tag-dot"></span>Contact
     </div>
-    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl text-center mb-4 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <h2 class="font-heading font-bold text-white text-4xl md:text-5xl text-center mb-4
+               scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Travaillons ensemble
     </h2>
-    <p class="font-body text-gammaBodyText text-center mb-12 leading-relaxed scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
+    <p class="font-body text-gammaBodyText text-center mb-12 leading-relaxed
+              scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out">
       Remplissez ce formulaire et nous vous répondrons dans les 24 heures avec une approche adaptée.
     </p>
 
-    <form class="bg-gammaCardBg rounded-2xl shadow-lg backdrop-blur-sm bg-opacity-90 p-8 md:p-10 border border-gray-800 space-y-6 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
-          style="border-color:rgba(169,91,149,.18);"
+    <form class="g-card md:p-10 scroll-animate opacity-0 translate-y-10 transition-all duration-700 ease-out"
+          style="border-color:rgba(169,91,149,.18); --spacing: 1.5rem;"
           onsubmit="handleFormSubmit(event)">
 
-      <div class="grid sm:grid-cols-2 gap-5">
+      <div class="grid sm:grid-cols-2 gap-5 mb-5">
         <div>
           <label class="block font-body font-semibold text-gammaBodyText/50 text-xs uppercase tracking-wider mb-2">Prénom & Nom *</label>
           <input type="text" required placeholder="Jean Dupont"
@@ -1444,7 +1219,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="mb-5">
         <label class="block font-body font-semibold text-gammaBodyText/50 text-xs uppercase tracking-wider mb-2">Email professionnel *</label>
         <input type="email" required placeholder="jean@votresociete.com"
           class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none"
@@ -1453,7 +1228,7 @@
           onblur="this.style.borderColor='rgba(169,91,149,.18)';this.style.boxShadow='none'"/>
       </div>
 
-      <div>
+      <div class="mb-5">
         <label class="block font-body font-semibold text-gammaBodyText/50 text-xs uppercase tracking-wider mb-2">Type de demande *</label>
         <select required
           class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none cursor-pointer appearance-none"
@@ -1467,13 +1242,12 @@
           <option style="background:#0B0C23">Agent IA sur mesure</option>
           <option style="background:#0B0C23">Application web / mobile no-code</option>
           <option style="background:#0B0C23">Site internet professionnel</option>
-          <option style="background:#0B0C23">Landing page de conversion</option>
           <option style="background:#0B0C23">Automatisation & workflows</option>
           <option style="background:#0B0C23">Architecture multi-agents</option>
         </select>
       </div>
 
-      <div>
+      <div class="mb-6">
         <label class="block font-body font-semibold text-gammaBodyText/50 text-xs uppercase tracking-wider mb-2">Décrivez votre projet *</label>
         <textarea rows="5" required placeholder="Décrivez votre besoin, vos enjeux et vos objectifs..."
           class="w-full rounded-xl px-4 py-3 text-sm font-body outline-none resize-none"
@@ -1482,33 +1256,30 @@
           onblur="this.style.borderColor='rgba(169,91,149,.18)';this.style.boxShadow='none'"></textarea>
       </div>
 
-      <button type="submit" id="submit-btn"
-        class="bg-gammaPrimary text-white rounded-lg px-6 py-3 hover:opacity-80 transition-all duration-300 font-heading font-medium w-full flex items-center justify-center gap-2">
+      <button type="submit" id="submit-btn" class="btn-primary w-full justify-center text-base">
         <span id="btn-label">Demander une étude</span>
         <svg id="btn-arrow" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
         </svg>
       </button>
 
-      <div id="form-ok" class="hidden rounded-xl p-4 text-center"
+      <div id="form-ok" class="hidden rounded-xl p-4 text-center mt-4"
            style="background:rgba(169,91,149,.09);border:1px solid rgba(169,91,149,.28);">
         <p class="font-heading font-semibold text-gammaPrimary text-sm">✓ Message envoyé — nous vous répondrons sous 24h.</p>
       </div>
 
-      <p class="font-body text-gammaBodyText/30 text-xs text-center">Échange confidentiel · Aucun engagement · Réponse sous 24h</p>
+      <p class="font-body text-gammaBodyText/30 text-xs text-center mt-4">Échange confidentiel · Aucun engagement · Réponse sous 24h</p>
     </form>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      FOOTER
-══════════════════════════════════════════════ -->
-<footer class="bg-gammaBg border-t py-12" style="border-color:rgba(169,91,149,.1);">
+══════════════════════════════════════════════════ -->
+<footer class="bg-gammaBg py-12" style="border-top:1px solid rgba(169,91,149,.1);">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
-
-      <!-- Logo -->
       <a href="#hero" class="flex items-center gap-2.5">
         <div class="w-[34px] h-[34px] rounded-xl flex items-center justify-center flex-shrink-0"
              style="background:linear-gradient(135deg,#7B3D6B,#A95B95);box-shadow:0 0 12px rgba(169,91,149,.45);">
@@ -1519,20 +1290,16 @@
           <p class="font-body text-gammaBodyText/35 text-xs mt-0.5">Intelligence artificielle & systèmes digitaux</p>
         </div>
       </a>
-
-      <!-- Nav -->
       <div class="flex flex-wrap gap-5 justify-center">
         <a href="#contexte"     class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Contexte</a>
         <a href="#services"     class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Services</a>
-        <a href="#architecture" class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Architecture IA</a>
+        <a href="#architecture" class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Architecture</a>
+        <a href="#demos"        class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Démos</a>
         <a href="#tarifs"       class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Tarifs</a>
-        <a href="#processus"    class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Processus</a>
         <a href="#contact"      class="font-body text-gammaBodyText/45 hover:text-white text-sm transition-colors">Contact</a>
         <a href="https://aitechlabs.com" target="_blank" rel="noopener"
            class="font-body font-semibold text-gammaPrimary hover:text-white text-sm transition-colors">aitechlabs.com ↗</a>
       </div>
-
-      <!-- Social -->
       <div class="flex items-center gap-3">
         <a href="https://aitechlabs.com" target="_blank" rel="noopener" aria-label="LinkedIn"
            class="w-9 h-9 rounded-lg flex items-center justify-center transition-all"
@@ -1554,128 +1321,249 @@
         </a>
       </div>
     </div>
-
-    <div class="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-3"
-         style="border-color:rgba(169,91,149,.1);">
+    <div class="pt-6 flex flex-col sm:flex-row justify-between items-center gap-3"
+         style="border-top:1px solid rgba(169,91,149,.1);">
       <p class="font-body text-gammaBodyText/25 text-xs text-center sm:text-left">
-        © 2024 AI TechLabs — Intelligence artificielle et systèmes digitaux pensés pour l'exécution réelle, au service de votre excellence opérationnelle. Site web : aitechlabs.com
+        © 2024 AI TechLabs — Intelligence artificielle et systèmes digitaux pensés pour l'exécution réelle, au service de votre excellence opérationnelle.
       </p>
       <a href="https://aitechlabs.com" target="_blank" rel="noopener"
-         class="font-body text-gammaBodyText/25 hover:text-gammaPrimary text-xs transition-colors flex-shrink-0">
-        aitechlabs.com
-      </a>
+         class="font-body text-gammaBodyText/25 hover:text-gammaPrimary text-xs transition-colors flex-shrink-0">aitechlabs.com</a>
     </div>
   </div>
 </footer>
 
 
-<!-- ══════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════
      JAVASCRIPT
-══════════════════════════════════════════════ -->
+══════════════════════════════════════════════════ -->
 <script>
-  /* ── Mobile menu ── */
-  document.getElementById('ham-btn').addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.toggle('open');
-  });
-  function closeMobileMenu() {
-    document.getElementById('mobile-menu').classList.remove('open');
-  }
+/* ─────────────────────────────────────────────────
+   Mobile menu
+───────────────────────────────────────────────── */
+document.getElementById('ham-btn').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
 
-  /* ── Navbar background on scroll ── */
-  const siteNav = document.getElementById('site-nav');
-  window.addEventListener('scroll', () => {
-    siteNav.style.background = window.scrollY > 60
-      ? 'rgba(5,5,10,.97)'
-      : 'rgba(5,5,10,.85)';
-  }, { passive: true });
+/* ─────────────────────────────────────────────────
+   Navbar opacity on scroll
+───────────────────────────────────────────────── */
+const siteNav = document.getElementById('site-nav');
+window.addEventListener('scroll', () => {
+  siteNav.style.background = window.scrollY > 60
+    ? 'rgba(5,5,10,.98)' : 'rgba(5,5,10,.88)';
+}, { passive: true });
 
-  /* ══════════════════════════════════════════════
-     INTERSECTION OBSERVER — SCROLL ANIMATIONS
-     Logique :
-       • Les éléments portent les classes Tailwind initiales :
-         opacity-0 translate-y-10 transition-all duration-700 ease-out
-       • À l'entrée dans le viewport :
-         → on retire  opacity-0   et  translate-y-10
-         → on ajoute  opacity-100 et  translate-y-0
-  ══════════════════════════════════════════════ */
-  const scrollObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        /* Retire les classes de départ */
-        el.classList.remove('opacity-0', 'translate-y-10');
-        /* Ajoute les classes d'arrivée */
-        el.classList.add('opacity-100', 'translate-y-0');
-        /* N'anime qu'une fois */
-        scrollObserver.unobserve(el);
+/* ═════════════════════════════════════════════════
+   CHART.JS — Graphe interactif d'automatisation
+   Reverse-engineered from the Gamma site curve:
+   ascending from ~5 (2020) to ~100 (2025)
+   Line color: #A95B95, gradient fill below
+═════════════════════════════════════════════════ */
+(function initChart() {
+  const canvas = document.getElementById('automatisationChart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  // Build gradient fill under the line
+  const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+  gradient.addColorStop(0,   'rgba(169, 91, 149, 0.35)');
+  gradient.addColorStop(0.6, 'rgba(169, 91, 149, 0.10)');
+  gradient.addColorStop(1,   'rgba(169, 91, 149, 0.00)');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+      datasets: [{
+        label: 'Investissements IA & Automatisation',
+        data: [12, 22, 38, 58, 80, 100],
+        borderColor: '#A95B95',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor: '#A95B95',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        pointHoverBackgroundColor: '#ffffff',
+        pointHoverBorderColor: '#A95B95',
+        pointHoverBorderWidth: 2.5,
+        tension: 0.45,
+        fill: true,
+        backgroundColor: gradient,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(11,12,35,.95)',
+          borderColor: 'rgba(169,91,149,.4)',
+          borderWidth: 1,
+          titleColor: '#C6BFEE',
+          bodyColor: '#DAD8E9',
+          padding: 10,
+          titleFont: { family: 'Prompt', weight: '600', size: 11 },
+          bodyFont:  { family: 'Mukta',  weight: '400', size: 12 },
+          displayColors: false,
+          callbacks: {
+            title: (items) => items[0]?.label ?? '',
+            label: (item) => {
+              const labels = ['Base', '+83%', '+215%', '+383%', '+567%', '+740%'];
+              return `Indice ${item.raw} (${labels[item.dataIndex]})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          display: false,
+        },
+        y: {
+          display: false,
+          min: 0,
+          max: 110,
+        }
       }
-    });
-  }, {
-    threshold:   0.07,
-    rootMargin: '0px 0px -40px 0px'
+    }
   });
+})();
 
-  /* Observe tous les éléments marqués scroll-animate */
-  document.querySelectorAll('.scroll-animate').forEach(el => {
-    scrollObserver.observe(el);
+/* ═════════════════════════════════════════════════
+   SVG PYRAMID — Interactive hover tooltip
+═════════════════════════════════════════════════ */
+(function initPyramid() {
+  const tooltip = document.getElementById('pyr-tooltip');
+  if (!tooltip) return;
+
+  const agentDetails = {
+    '0': {
+      title: 'AXE 5 — Extensions métiers & agents sur mesure',
+      agents: ['Jarvis Architect', 'Jarvis Custom'],
+      desc: 'Conception d\'agents spécifiques et développement de systèmes IA personnalisés pour vos besoins uniques.',
+      color: '#C87AB4'
+    },
+    '1': {
+      title: 'AXE 4 — Pilotage & supervision stratégique',
+      agents: ['Jarvis Insight', 'Jarvis Control'],
+      desc: 'Analyse financière, business intelligence, supervision globale. Les agents qui éclairent vos décisions.',
+      color: '#A95B95'
+    },
+    '2': {
+      title: 'AXE 3 — Sécurité, conformité & structuration',
+      agents: ['Jarvis Secure', 'Jarvis Legal', 'Jarvis Finance', 'Jarvis Data'],
+      desc: 'Protection des données, conformité légale, qualité des informations. Les agents qui sécurisent vos processus.',
+      color: '#8A3E78'
+    },
+    '3': {
+      title: 'AXE 2 — Exécution & organisation interne',
+      agents: ['Jarvis Flow', 'Jarvis Admin', 'Jarvis People', 'Jarvis Ops'],
+      desc: 'Administration, RH, opérations métiers. Les agents qui structurent et fluidifient votre organisation.',
+      color: '#6D2760'
+    },
+    '4': {
+      title: 'AXE 1 — Croissance & relation client',
+      agents: ['Jarvis Lead', 'Jarvis Voice', 'Jarvis Care', 'Jarvis Marketing'],
+      desc: 'Acquisition, prospection, support et fidélisation. Les agents qui génèrent et entretiennent votre pipeline.',
+      color: '#4F1A46'
+    }
+  };
+
+  document.querySelectorAll('.pyr-seg').forEach(seg => {
+    seg.addEventListener('mouseenter', () => {
+      const tier = seg.dataset.tier;
+      const d = agentDetails[tier];
+      if (!d) return;
+
+      tooltip.style.borderColor = d.color + '80';
+      tooltip.innerHTML = `
+        <div class="flex items-center gap-2 mb-3">
+          <div style="width:10px;height:10px;border-radius:3px;background:${d.color};flex-shrink:0;"></div>
+          <p class="font-heading font-bold text-white text-sm">${d.title}</p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          ${d.agents.map(a => `<span style="font-size:.65rem;font-weight:600;color:#C6BFEE;background:rgba(198,191,238,.08);border:1px solid rgba(198,191,238,.18);padding:2px 7px;border-radius:4px;">${a}</span>`).join('')}
+        </div>
+        <p style="font-family:'Mukta',sans-serif;font-size:.8rem;color:rgba(218,216,233,.6);line-height:1.5;">${d.desc}</p>
+      `;
+    });
+
+    seg.addEventListener('mouseleave', () => {
+      tooltip.style.borderColor = 'rgba(169,91,149,.35)';
+      tooltip.innerHTML = `<p class="font-body text-gammaBodyText/50 text-sm text-center py-4">← Survolez un segment de la pyramide pour explorer l'axe</p>`;
+    });
   });
+})();
 
-  /* ── SVG graph draw animation ── */
-  const graphObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const p = document.getElementById('graph-path');
-        if (p) p.classList.add('drawn');
-        graphObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  const gw = document.getElementById('graph-wrap');
-  if (gw) graphObserver.observe(gw);
+/* ═════════════════════════════════════════════════
+   INTERSECTION OBSERVER — Scroll reveal
+   • Initial state (set in HTML):
+       opacity-0 translate-y-10 transition-all duration-700 ease-out
+   • When element enters viewport:
+       removes  opacity-0  +  translate-y-10
+       adds     opacity-100 + translate-y-0
+═════════════════════════════════════════════════ */
+const scrollObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      el.classList.remove('opacity-0', 'translate-y-10');
+      el.classList.add('opacity-100', 'translate-y-0');
+      scrollObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
 
-  /* ── Active nav link on scroll ── */
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks  = document.querySelectorAll('#site-nav a[href^="#"]');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 120) current = s.id;
-    });
-    navLinks.forEach(a => {
-      const isActive = a.getAttribute('href') === '#' + current;
-      a.style.color   = isActive ? '#A95B95' : '';
-      a.style.opacity = isActive ? '1' : '';
-    });
-  }, { passive: true });
+document.querySelectorAll('.scroll-animate').forEach(el => scrollObs.observe(el));
 
-  /* ── Subtle parallax on hero orbs ── */
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    document.querySelectorAll('#hero .orb').forEach((o, i) => {
-      o.style.transform = `translateY(${y * (i % 2 === 0 ? .065 : -.045)}px)`;
-    });
-  }, { passive: true });
+/* ─────────────────────────────────────────────────
+   Active nav link on scroll
+───────────────────────────────────────────────── */
+const navSections = document.querySelectorAll('section[id]');
+const navLinks    = document.querySelectorAll('#site-nav a[href^="#"]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  navSections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? '#A95B95' : '';
+  });
+}, { passive: true });
 
-  /* ── Form submit handler ── */
-  function handleFormSubmit(e) {
-    e.preventDefault();
-    const btn   = document.getElementById('submit-btn');
-    const label = document.getElementById('btn-label');
-    const arrow = document.getElementById('btn-arrow');
-    const ok    = document.getElementById('form-ok');
+/* ─────────────────────────────────────────────────
+   Subtle parallax on hero orbs
+───────────────────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  document.querySelectorAll('#hero .orb').forEach((o, i) => {
+    o.style.transform = `translateY(${y * (i % 2 === 0 ? .06 : -.04)}px)`;
+  });
+}, { passive: true });
 
-    btn.disabled = true;
-    label.textContent = 'Envoi en cours…';
-    arrow.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round"
-      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181
-         3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>`;
-
-    setTimeout(() => {
-      btn.style.display = 'none';
-      ok.classList.remove('hidden');
-      e.target.reset();
-    }, 1400);
-  }
+/* ─────────────────────────────────────────────────
+   Form submit handler
+───────────────────────────────────────────────── */
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const btn   = document.getElementById('submit-btn');
+  const label = document.getElementById('btn-label');
+  const arrow = document.getElementById('btn-arrow');
+  const ok    = document.getElementById('form-ok');
+  btn.disabled = true;
+  label.textContent = 'Envoi en cours…';
+  arrow.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round"
+    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181
+       3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>`;
+  setTimeout(() => { btn.style.display = 'none'; ok.classList.remove('hidden'); e.target.reset(); }, 1400);
+}
 </script>
 
 </body>
